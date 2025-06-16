@@ -98,6 +98,23 @@
     .assessment-options input[type="checkbox"], .below-options input[type="checkbox"] {
       margin-right: 0.5em;
     }
+    .profile-actions {
+      margin-top: 1.5em;
+    }
+    .profile-actions button {
+      margin-right: 0.8em;
+      margin-bottom: 0.3em;
+      padding: 0.6em 1.2em;
+      font-size: 1em;
+      border: none;
+      border-radius: 5px;
+      background: #1976d2;
+      color: #fff;
+      cursor: pointer;
+    }
+    .profile-actions button:hover {
+      background: #1565c0;
+    }
     @media (max-width: 1200px) {
       .grid-container { grid-template-columns: 1fr; }
       .profile-card, .analytics-card { max-width: 100%; }
@@ -162,6 +179,39 @@
       { name: "Johan du Plessis", gender: "Male", languages: ["Afrikaans", "English"], class: "Grade 9C", assessments: { classTest: 59, presentation: 61, project: 60, test1: 58, test2: 66, exam: 70 } }
     ];
 
+    // Save/load state per learner
+    function getLearnerStorageKey(idx) {
+      return "learnerProfile_" + idx;
+    }
+    function saveProfile(idx) {
+      const support = [];
+      document.querySelectorAll('.support-checkbox').forEach(cb => {
+        if (cb.checked) support.push(cb.value);
+      });
+      const supportOther = document.getElementById('supportOtherBox')?.value || "";
+      const gradeLevel = document.getElementById('gradeLevel').value;
+      const styles = [];
+      document.querySelectorAll('.style-checkbox').forEach(cb => {
+        if (cb.checked) styles.push(cb.value);
+      });
+      // Assessment/Support options
+      const assessment = [];
+      document.querySelectorAll('.assessment-checkbox').forEach(cb => {
+        if (cb.checked) assessment.push(cb.value);
+      });
+      const below = [];
+      document.querySelectorAll('.below-checkbox').forEach(cb => {
+        if (cb.checked) below.push(cb.value);
+      });
+
+      const data = { support, supportOther, gradeLevel, styles, assessment, below };
+      localStorage.setItem(getLearnerStorageKey(idx), JSON.stringify(data));
+    }
+    function loadProfile(idx) {
+      const raw = localStorage.getItem(getLearnerStorageKey(idx));
+      return raw ? JSON.parse(raw) : {};
+    }
+
     function getAverage(a) {
       return Math.round(
         (a.classTest + a.presentation + a.project + a.test1 + a.test2 + a.exam) / 6
@@ -193,7 +243,6 @@
       return 0;
     }
 
-    // Only allow up to 2 support checkboxes
     function handleSupportCheckboxLimit(e) {
       const checkboxes = document.querySelectorAll('.support-checkbox');
       const checked = Array.from(checkboxes).filter(cb => cb.checked);
@@ -206,8 +255,11 @@
       // Show/hide the Other box
       const otherChecked = document.getElementById('supportOtherCheck').checked;
       document.getElementById('supportOtherBox').style.display = otherChecked ? 'block' : 'none';
+      saveProfile(getSelectedLearnerIndex());
     }
-    // Only allow up to 2 learning style checkboxes
+    function handleSupportOtherInput(e) {
+      saveProfile(getSelectedLearnerIndex());
+    }
     function handleStyleCheckboxLimit(e) {
       const styleCheckboxes = document.querySelectorAll('.style-checkbox');
       const checked = Array.from(styleCheckboxes).filter(cb => cb.checked);
@@ -217,6 +269,7 @@
       } else {
         document.getElementById('styleError').textContent = "";
       }
+      saveProfile(getSelectedLearnerIndex());
     }
     function handleAssessmentCheckboxLimit(e) {
       const assessmentCheckboxes = document.querySelectorAll('.assessment-checkbox');
@@ -227,6 +280,7 @@
       } else {
         document.getElementById('assessmentError').textContent = "";
       }
+      saveProfile(getSelectedLearnerIndex());
     }
     function handleBelowCheckboxLimit(e) {
       const belowCheckboxes = document.querySelectorAll('.below-checkbox');
@@ -237,6 +291,7 @@
       } else {
         document.getElementById('belowError').textContent = "";
       }
+      saveProfile(getSelectedLearnerIndex());
     }
     function handleAssessmentDisplay() {
       const perf = document.getElementById('gradeLevel').value;
@@ -245,13 +300,11 @@
       if (perf === "At Grade Level" || perf === "Above Grade Level") {
         assessmentDiv.style.display = 'block';
         belowDiv.style.display = 'none';
-        // Uncheck below checkboxes and clear error
         document.querySelectorAll('.below-checkbox').forEach(cb => cb.checked = false);
         document.getElementById('belowError').textContent = "";
       } else if (perf === "Below Grade Level") {
         assessmentDiv.style.display = 'none';
         belowDiv.style.display = 'block';
-        // Uncheck assessment checkboxes and clear error
         document.querySelectorAll('.assessment-checkbox').forEach(cb => cb.checked = false);
         document.getElementById('assessmentError').textContent = "";
       } else {
@@ -262,7 +315,141 @@
         document.getElementById('belowError').textContent = "";
         document.getElementById('assessmentError').textContent = "";
       }
+      saveProfile(getSelectedLearnerIndex());
     }
+    function handleGradeLevelChange(e) {
+      handleAssessmentDisplay();
+      saveProfile(getSelectedLearnerIndex());
+    }
+
+    function handleRestoreProfile(idx) {
+      const data = loadProfile(idx);
+      // Support
+      if (data.support) {
+        document.querySelectorAll('.support-checkbox').forEach(cb => {
+          cb.checked = data.support.includes(cb.value);
+        });
+      }
+      if (data.supportOther !== undefined && document.getElementById('supportOtherBox')) {
+        document.getElementById('supportOtherBox').value = data.supportOther;
+        document.getElementById('supportOtherBox').style.display = document.getElementById('supportOtherCheck').checked ? 'block' : 'none';
+      }
+      // Grade level
+      if (data.gradeLevel && document.getElementById('gradeLevel')) {
+        document.getElementById('gradeLevel').value = data.gradeLevel;
+        handleAssessmentDisplay();
+      }
+      // Styles
+      if (data.styles) {
+        document.querySelectorAll('.style-checkbox').forEach(cb => {
+          cb.checked = data.styles.includes(cb.value);
+        });
+      }
+      // Assessment
+      if (data.assessment) {
+        document.querySelectorAll('.assessment-checkbox').forEach(cb => {
+          cb.checked = data.assessment.includes(cb.value);
+        });
+      }
+      // Below
+      if (data.below) {
+        document.querySelectorAll('.below-checkbox').forEach(cb => {
+          cb.checked = data.below.includes(cb.value);
+        });
+      }
+    }
+
+    function printProfile() {
+      const profile = document.querySelector('.profile-card');
+      const printWindow = window.open('', '', 'width=800,height=600');
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Print Profile</title>
+            <style>
+              body { font-family: Arial, sans-serif; margin: 2rem; background: #fff; }
+              .profile-card { box-shadow: 0 2px 8px #0001; border-radius: 8px; padding: 1.5em; }
+              .marks-table { width: 100%; border-collapse: collapse; }
+              .marks-table th, .marks-table td { border: 1px solid #ccc; padding: 0.5em; text-align: center; }
+            </style>
+          </head>
+          <body>${profile.outerHTML}</body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.focus();
+      printWindow.print();
+    }
+
+    function exportProfile() {
+      const idx = getSelectedLearnerIndex();
+      const learner = learners[idx];
+      const data = loadProfile(idx);
+      const exportObj = {
+        name: learner.name,
+        gender: learner.gender,
+        languages: learner.languages,
+        class: learner.class,
+        assessments: learner.assessments,
+        ...data
+      };
+      const blob = new Blob([JSON.stringify(exportObj, null, 2)], {type: "application/json"});
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `${learner.name.replace(/\s+/g,"_")}_profile.json`;
+      link.click();
+    }
+
+    function exportProfileCSV() {
+      const idx = getSelectedLearnerIndex();
+      const learner = learners[idx];
+      const data = loadProfile(idx);
+
+      // Base fields
+      const fields = [
+        ["Name", learner.name],
+        ["Gender", learner.gender],
+        ["Languages", (learner.languages||[]).join(", ")],
+        ["Class", learner.class],
+        ["Class Test", learner.assessments.classTest],
+        ["Presentation", learner.assessments.presentation],
+        ["Project", learner.assessments.project],
+        ["Test 1", learner.assessments.test1],
+        ["Test 2", learner.assessments.test2],
+        ["Exam", learner.assessments.exam]
+      ];
+
+      // Support Needs
+      if (data.support && data.support.length > 0)
+        fields.push(["Support Needs", data.support.join(", ")]);
+      if (data.support && data.support.includes("Other") && data.supportOther)
+        fields.push(["Support Needs (Other)", data.supportOther]);
+
+      // Performance
+      if (data.gradeLevel) fields.push(["Performance", data.gradeLevel]);
+
+      // Assessment or Below-Grade Support Options
+      if ((data.gradeLevel === "Above Grade Level" || data.gradeLevel === "At Grade Level") && data.assessment && data.assessment.length > 0)
+        fields.push(["Assessment Options", data.assessment.join(", ")]);
+      if (data.gradeLevel === "Below Grade Level" && data.below && data.below.length > 0)
+        fields.push(["Support Options (Below Grade Level)", data.below.join(", ")]);
+
+      // Learning Styles
+      if (data.styles && data.styles.length > 0)
+        fields.push(["Learning Styles", data.styles.join(", ")]);
+
+      // CSV encoding
+      const csvRows = fields.map(([k,v]) => `"${k.replace(/"/g,'""')}","${String(v).replace(/"/g,'""')}"`);
+      const csvString = csvRows.join("\r\n");
+
+      // Download
+      const blob = new Blob([csvString], {type: "text/csv"});
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = (learner.name.replace(/\s+/g,"_") || "profile") + "_profile.csv";
+      link.click();
+    }
+
     function renderProfile() {
       const idx = getSelectedLearnerIndex();
       const learner = learners[idx];
@@ -342,6 +529,11 @@
             <label><input type="checkbox" class="style-checkbox" value="Reading/Writing"> Reading/Writing</label>
             <div id="styleError" class="error"></div>
           </div>
+          <div class="profile-actions">
+            <button onclick="printProfile()">Print Profile</button>
+            <button onclick="exportProfile()">Export Profile (JSON)</button>
+            <button onclick="exportProfileCSV()">Export Profile (CSV)</button>
+          </div>
         </div>
       `;
       document.querySelectorAll('.style-checkbox').forEach(cb =>
@@ -350,6 +542,7 @@
       document.querySelectorAll('.support-checkbox').forEach(cb =>
         cb.onchange = handleSupportCheckboxLimit
       );
+      document.getElementById('supportOtherBox').oninput = handleSupportOtherInput;
       document.querySelectorAll('.assessment-checkbox').forEach(cb =>
         cb.onchange = handleAssessmentCheckboxLimit
       );
@@ -357,10 +550,11 @@
         cb.onchange = handleBelowCheckboxLimit
       );
       const gradeLevel = document.getElementById('gradeLevel');
-      gradeLevel.onchange = handleAssessmentDisplay;
+      gradeLevel.onchange = handleGradeLevelChange;
+      handleRestoreProfile(idx);
     }
 
-    // 3. Render analytics chart
+    // Analytics chart function (unchanged)
     let chart;
     function updateAnalyticsChart() {
       const type = document.getElementById('analyticsType').value;
@@ -368,7 +562,6 @@
       if (chart) chart.destroy();
 
       if (type === "average") {
-        // Bar: Average marks per learner
         const labels = learners.map(l => l.name);
         const data = learners.map(l => getAverage(l.assessments));
         chart = new Chart(ctx, {
@@ -391,7 +584,6 @@
           }
         });
       } else if (type === "styles") {
-        // Pie: Learning Styles Distribution
         const styleCounts = { Visual: 0, Auditory: 0, Kinesthetic: 0 };
         learners.forEach(l => {
           const avg = getAverage(l.assessments);
@@ -415,7 +607,6 @@
           }
         });
       } else if (type === "gender") {
-        // Pie: Gender Distribution
         const genderCounts = { Female: 0, Male: 0 };
         learners.forEach(l => genderCounts[l.gender]++);
         chart = new Chart(ctx, {
