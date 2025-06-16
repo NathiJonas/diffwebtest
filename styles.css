@@ -1,8 +1,37 @@
 body { font-family: Arial, sans-serif; background-color: #121212; color: #fff; margin: 0; padding: 20px; }
 h1 { text-align: center; }
-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-th, td { padding: 10px; border: 1px solid #444; text-align: left; }
-th { cursor: pointer; background-color: #222; }
+.dashboard-flex {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+table {
+  width: 50%;            /* Halve table width */
+  border-collapse: collapse;
+  margin-top: 20px;
+  font-size: 0.75em;     /* Halve font size */
+  max-width: 400px;
+  min-width: 180px;
+}
+
+th, td {
+  padding: 5px;          /* Halve cell padding */
+  border: 1px solid #444;
+  text-align: left;
+}
+
+.chart-container {
+  width: 400px;
+  min-width: 240px;
+  height: 320px;
+  background: #1a1a1a;
+  border-radius: 8px;
+  padding: 16px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
 input, select, button { margin: 5px; padding: 5px; background: #333; color: #fff; border: 1px solid #555; border-radius: 4px; }
 button:hover { background-color: #444; }
 .controls { display: flex; flex-wrap: wrap; justify-content: space-between; margin-bottom: 10px; }
