@@ -1,46 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Learner Dashboard</title>
-  <link rel="stylesheet" href="styles.css">
+    <title>Dashboard</title>
 </head>
 <body>
+    <h1>Learners List</h1>
+    <div id="learners"></div>
 
-<h1>Learner Assessment Dashboard</h1>
-
-<div class="controls">
-  <div>
-    <input type="text" id="searchInput" placeholder="Search by name..." onkeyup="renderTable()" />
-    <select id="filterClass" onchange="renderTable()">
-      <option value="">All Classes</option>
-      <option value="8A">8A</option>
-      <option value="9C">9C</option>
-      <option value="10B">10B</option>
-    </select>
-    <button onclick="exportCSV()">Export CSV</button>
-  </div>
-  <button onclick="logout()">Logout</button>
-</div>
-
-<table id="learnerTable">
-  <thead>
-    <tr>
-      <th onclick="sortTable('surname')">Name</th>
-      <th>Grade</th>
-      <th>Class</th>
-      <th>Age</th>
-      <th>Parent</th>
-      <th>Cell</th>
-      <th>Visual</th>
-      <th>Auditory</th>
-      <th>Reading</th>
-      <th>Kinesthetic</th>
-      <th>Preferred</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
-
-<script src="script.js"></script>
+    <script>
+    fetch('learners.json')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        const container = document.getElementById('learners');
+        if (Array.isArray(data)) {
+          container.innerHTML = '<ul>' + data.map(learner => `<li>${learner.name}</li>`).join('') + '</ul>';
+        } else {
+          container.textContent = 'No learners found or invalid JSON!';
+        }
+      })
+      .catch(error => {
+        document.getElementById('learners').textContent = 'Error loading learners.json: ' + error;
+      });
+    </script>
 </body>
 </html>
