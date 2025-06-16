@@ -2,16 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Learner Profile (Grid Layout)</title>
+  <title>Learner Profile & Analytics</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 2rem; background: #f8f9fa; }
     nav { margin-bottom: 1.5em; }
     nav a { margin-right: 1em; text-decoration: none; color: #333; }
     h1 { color: #1a237e; }
-
     .grid-container {
       display: grid;
-      grid-template-columns: 260px 1fr;
+      grid-template-columns: 250px 1.2fr 1.2fr;
       gap: 2em;
       margin-top: 2em;
       align-items: start;
@@ -43,12 +42,19 @@
       width: 100%;
       padding: 1.5em;
     }
-    @media (max-width: 900px) {
-      .grid-container {
-        grid-template-columns: 1fr;
-        gap: 1em;
-      }
-      .profile-card { max-width: 100%; }
+    .analytics-card {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px #0001;
+      padding: 1.5em;
+      min-width: 300px;
+    }
+    .analytics-filter {
+      margin-bottom: 1em;
+    }
+    @media (max-width: 1200px) {
+      .grid-container { grid-template-columns: 1fr; }
+      .profile-card, .analytics-card { max-width: 100%; }
       .radio-list { width: 100%; }
     }
     .label { font-weight: bold; }
@@ -62,18 +68,31 @@
     .info-list li { margin-bottom: 0.3em; }
     .selected-style { font-weight: bold; }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <nav>
     <a href="dashboard.html">Dashboard</a> |
     <a href="learner-style.html">Learner Profile</a>
   </nav>
-  <h1>Learner Profile</h1>
+  <h1>Learner Profile & Analytics</h1>
   <div class="grid-container">
     <div id="learnerRadioGroup" class="radio-list"></div>
     <div id="profile"></div>
+    <div class="analytics-card">
+      <div class="analytics-filter">
+        <label for="analyticsType"><b>Analytics Type:</b></label>
+        <select id="analyticsType">
+          <option value="average">Average Marks per Learner</option>
+          <option value="styles">Learning Styles Distribution</option>
+          <option value="gender">Gender Distribution</option>
+        </select>
+      </div>
+      <canvas id="analyticsChart" height="320"></canvas>
+    </div>
   </div>
   <script>
+    // --- Learners dataset ---
     const learners = [
       { name: "Lerato Mahlangu", gender: "Female", languages: ["isiZulu", "English"], class: "Grade 9C", assessments: { classTest: 72, presentation: 85, project: 78, test1: 65, test2: 54, exam: 90 } },
       { name: "Sipho Nkosi", gender: "Male", languages: ["isiZulu", "English"], class: "Grade 9C", assessments: { classTest: 88, presentation: 79, project: 60, test1: 91, test2: 77, exam: 40 } },
@@ -97,6 +116,19 @@
       { name: "Johan du Plessis", gender: "Male", languages: ["Afrikaans", "English"], class: "Grade 9C", assessments: { classTest: 59, presentation: 61, project: 60, test1: 58, test2: 66, exam: 70 } }
     ];
 
+    // Utility functions
+    function getAverage(a) {
+      return Math.round(
+        (a.classTest + a.presentation + a.project + a.test1 + a.test2 + a.exam) / 6
+      );
+    }
+    function getSystemStyle(avg) {
+      if (avg >= 80) return "Visual";
+      if (avg >= 60) return "Auditory";
+      return "Kinesthetic";
+    }
+
+    // 1. Render learner radio buttons
     function populateLearnerRadios() {
       const group = document.getElementById('learnerRadioGroup');
       group.innerHTML = '<span class="label">Select Learner:</span>';
@@ -109,7 +141,6 @@
         `;
       });
     }
-
     function getSelectedLearnerIndex() {
       const radios = document.getElementsByName('learnerRadio');
       for (let i = 0; i < radios.length; i++) {
@@ -118,6 +149,7 @@
       return 0;
     }
 
+    // 2. Render profile
     function handleCheckboxLimit(e) {
       const styleCheckboxes = document.querySelectorAll('.style-checkbox');
       const checked = Array.from(styleCheckboxes).filter(cb => cb.checked);
@@ -128,17 +160,13 @@
         document.getElementById('styleError').textContent = "";
       }
     }
-
     function renderProfile() {
       const idx = getSelectedLearnerIndex();
       const learner = learners[idx];
       if (!learner) return;
       const a = learner.assessments;
-      const avg = Math.round((a.classTest + a.presentation + a.project + a.test1 + a.test2 + a.exam) / 6);
-      let systemStyle = "";
-      if (avg >= 80) systemStyle = "Visual";
-      else if (avg >= 60) systemStyle = "Auditory";
-      else systemStyle = "Kinesthetic";
+      const avg = getAverage(a);
+      const systemStyle = getSystemStyle(avg);
       document.getElementById('profile').innerHTML = `
         <div class="profile-card">
           <h2>${learner.name}</h2>
@@ -187,10 +215,89 @@
       );
     }
 
+    // 3. Render analytics chart
+    let chart;
+    function updateAnalyticsChart() {
+      const type = document.getElementById('analyticsType').value;
+      const ctx = document.getElementById('analyticsChart').getContext('2d');
+      if (chart) chart.destroy();
+
+      if (type === "average") {
+        // Bar: Average marks per learner
+        const labels = learners.map(l => l.name);
+        const data = learners.map(l => getAverage(l.assessments));
+        chart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels,
+            datasets: [{
+              label: 'Average Mark',
+              data,
+              backgroundColor: 'rgba(54, 162, 235, 0.6)',
+              borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            plugins: { legend: { display: false } },
+            scales: {
+              y: { beginAtZero: true, max: 100, title: { display: true, text: 'Average (%)' } }
+            }
+          }
+        });
+      } else if (type === "styles") {
+        // Pie: Learning Styles Distribution
+        const styleCounts = { Visual: 0, Auditory: 0, Kinesthetic: 0 };
+        learners.forEach(l => {
+          const avg = getAverage(l.assessments);
+          styleCounts[getSystemStyle(avg)]++;
+        });
+        chart = new Chart(ctx, {
+          type: 'pie',
+          data: {
+            labels: Object.keys(styleCounts),
+            datasets: [{
+              data: Object.values(styleCounts),
+              backgroundColor: [
+                'rgba(76, 175, 80, 0.7)',
+                'rgba(255, 235, 59, 0.7)',
+                'rgba(255, 152, 0, 0.7)'
+              ]
+            }]
+          },
+          options: {
+            plugins: { legend: { display: true } }
+          }
+        });
+      } else if (type === "gender") {
+        // Pie: Gender Distribution
+        const genderCounts = { Female: 0, Male: 0 };
+        learners.forEach(l => genderCounts[l.gender]++);
+        chart = new Chart(ctx, {
+          type: 'pie',
+          data: {
+            labels: Object.keys(genderCounts),
+            datasets: [{
+              data: Object.values(genderCounts),
+              backgroundColor: [
+                'rgba(244, 143, 177, 0.7)', // Pink
+                'rgba(66, 165, 245, 0.7)'   // Blue
+              ]
+            }]
+          },
+          options: {
+            plugins: { legend: { display: true } }
+          }
+        });
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
       populateLearnerRadios();
       renderProfile();
+      updateAnalyticsChart();
       document.getElementById('learnerRadioGroup').onchange = renderProfile;
+      document.getElementById('analyticsType').onchange = updateAnalyticsChart;
     });
   </script>
 </body>
