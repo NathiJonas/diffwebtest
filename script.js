@@ -31,6 +31,7 @@ function renderTable() {
         <td>${l.preferred_learning_style}</td>
       </tr>`;
   });
+  renderChart();
 }
 
 function renderChart() {
@@ -45,6 +46,7 @@ function renderChart() {
   ).forEach(l => {
     const style = l.preferred_learning_style || "Unknown";
     styleCounts[style] = (styleCounts[style] || 0) + 1;
+    
   });
 
   window.learnerChart = new Chart(ctx, {
@@ -63,7 +65,6 @@ function renderChart() {
     }
   });
 }
-renderChart();
 function sortTable(field) {
   learners.sort((a, b) => {
     let nameA = a.name.split(" ").slice(-1)[0].toLowerCase();
