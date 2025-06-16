@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add Learner Row</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #121212; color: #fff; margin: 0; padding: 20px; }
+    form {
+      background: #1a1a1a;
+      padding: 24px;
+      border-radius: 8px;
+      max-width: 500px;
+      margin: 40px auto;
+      box-shadow: 0 2px 8px #000a;
+    }
+    label { display: block; margin-top: 12px; }
+    input, select, button {
+      margin-top: 5px;
+      padding: 7px;
+      background: #333;
+      color: #fff;
+      border: 1px solid #555;
+      border-radius: 4px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    button { margin-top: 18px; background: #246be8; cursor: pointer; }
+    button:hover { background: #1b4b9a; }
+    a { color: #66f; display: inline-block; margin-top: 24px; }
+  </style>
+</head>
+<body>
+
+  <form id="addRowForm">
+    <h2>Add New Learner</h2>
+    <label>Name: <input type="text" id="name" required></label>
+    <label>Grade: <input type="text" id="grade" required></label>
+    <label>Class:
+      <select id="class" required>
+        <option value="">Select class</option>
+        <option value="8A">8A</option>
+        <option value="9C">9C</option>
+        <option value="10B">10B</option>
+      </select>
+    </label>
+    <label>Age: <input type="number" id="age" required></label>
+    <label>Parent Name: <input type="text" id="parent_name" required></label>
+    <label>Parent Cell: <input type="text" id="parent_cell" required></label>
+    <label>Visual Score: <input type="number" id="score_visual" min="0" required></label>
+    <label>Auditory Score: <input type="number" id="score_auditory" min="0" required></label>
+    <label>Reading Score: <input type="number" id="score_reading" min="0" required></label>
+    <label>Kinesthetic Score: <input type="number" id="score_kinesthetic" min="0" required></label>
+    <label>Preferred Learning Style:
+      <select id="preferred_learning_style" required>
+        <option value="">Select style</option>
+        <option value="Visual">Visual</option>
+        <option value="Auditory">Auditory</option>
+        <option value="Reading">Reading</option>
+        <option value="Kinesthetic">Kinesthetic</option>
+      </select>
+    </label>
+    <button type="submit">Add Learner</button>
+    <a href="dashboard.html">Cancel</a>
+  </form>
+
+  <script>
+    document.getElementById('addRowForm').onsubmit = function(e) {
+      e.preventDefault();
+      // Get current learners from localStorage or start with empty array
+      let learners = JSON.parse(localStorage.getItem('learners') || '[]');
+      // Add new learner from form fields
+      learners.push({
+        name: document.getElementById('name').value,
+        grade: document.getElementById('grade').value,
+        class: document.getElementById('class').value,
+        age: document.getElementById('age').value,
+        parent_name: document.getElementById('parent_name').value,
+        parent_cell: document.getElementById('parent_cell').value,
+        score_visual: document.getElementById('score_visual').value,
+        score_auditory: document.getElementById('score_auditory').value,
+        score_reading: document.getElementById('score_reading').value,
+        score_kinesthetic: document.getElementById('score_kinesthetic').value,
+        preferred_learning_style: document.getElementById('preferred_learning_style').value
+      });
+      // Save updated array to localStorage
+      localStorage.setItem('learners', JSON.stringify(learners));
+      // Redirect back to dashboard
+      window.location.href = 'dashboard.html';
+    }
+  </script>
+
+</body>
+</html>
