@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Learner Dashboard</title>
- <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
@@ -41,17 +41,6 @@
   <tbody></tbody>
 </table>
 
-<script>
-let learners = [];
-let sortAsc = true;
-
-async function loadData() {
-  const res = await fetch('learners.json');
-  learners = await res.json();
-  renderTable();
-}
 <script src="script.js"></script>
-</script>
-
 </body>
 </html>
