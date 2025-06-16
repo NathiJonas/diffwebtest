@@ -8,9 +8,39 @@
     nav { margin-bottom: 1.5em; }
     nav a { margin-right: 1em; text-decoration: none; color: #333; }
     h1 { color: #1a237e; }
+    .flex-container {
+      display: flex;
+      align-items: flex-start;
+      gap: 2em;
+      margin-top: 2em;
+    }
+    .radio-list {
+      min-width: 200px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px #0001;
+      padding: 1.2em 1em;
+      margin-top: 0;
+      height: fit-content;
+    }
+    .radio-list .label {
+      display: block;
+      margin-bottom: 0.6em;
+      font-weight: bold;
+      font-size: 1.08em;
+    }
+    .radio-list label {
+      display: block;
+      margin-bottom: 0.5em;
+      font-weight: normal;
+      cursor: pointer;
+    }
     .profile-card {
-      background: #fff; border-radius: 8px; box-shadow: 0 2px 8px #0001;
-      max-width: 460px; padding: 1.5em; margin: 2em auto;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px #0001;
+      max-width: 460px;
+      padding: 1.5em;
     }
     .label { font-weight: bold; }
     .marks-table { width: 100%; margin-bottom: 1em; border-collapse: collapse; }
@@ -22,8 +52,11 @@
     .info-list { margin: 0 0 1em 0; }
     .info-list li { margin-bottom: 0.3em; }
     .selected-style { font-weight: bold; }
-    .radio-list label { display: block; margin-bottom: 0.25em; }
-    .radio-list { margin-bottom: 1em; }
+    @media (max-width: 900px) {
+      .flex-container { flex-direction: column; gap: 1em; }
+      .profile-card { max-width: 100%; }
+      .radio-list { width: 100%; min-width: unset; }
+    }
   </style>
 </head>
 <body>
@@ -32,8 +65,10 @@
     <a href="learner-style.html">Learner Profile</a>
   </nav>
   <h1>Learner Profile</h1>
-  <div id="learnerRadioGroup" class="radio-list"></div>
-  <div id="profile"></div>
+  <div class="flex-container">
+    <div id="learnerRadioGroup" class="radio-list"></div>
+    <div id="profile"></div>
+  </div>
   <script>
     // --- Complete learner dataset ---
     const learners = [
@@ -61,13 +96,14 @@
 
     function populateLearnerRadios() {
       const group = document.getElementById('learnerRadioGroup');
-      group.innerHTML = '<span class="label">Select Learner:</span><br>';
+      group.innerHTML = '<span class="label">Select Learner:</span>';
       learners.forEach((learner, i) => {
         group.innerHTML += `
           <label>
             <input type="radio" name="learnerRadio" value="${i}" ${i===0?"checked":""}>
             ${learner.name}
-          </label>`;
+          </label>
+        `;
       });
     }
 
