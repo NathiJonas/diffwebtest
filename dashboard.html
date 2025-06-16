@@ -60,7 +60,7 @@
       <option value="10B">10B</option>
     </select>
     <button onclick="exportCSV()">Export CSV</button>
-    <button onclick="window.location.href='add-row.html'">Add Row</button>
+    <!-- <button onclick="window.location.href='add-row.html'">Add Row</button> -->
   </div>
   <button onclick="window.location.href='logout.html'" id="logoutBtn">Logout</button>
 </div>
@@ -90,23 +90,29 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-let learners = [];
+let learners = [
+  { name: "Lerato Mokoena", grade: "8", class: "8A", age: 14, parent_name: "Thabo Mokoena", parent_cell: "0721234567", score_visual: 8, score_auditory: 7, score_reading: 5, score_kinesthetic: 6, preferred_learning_style: "Visual" },
+  { name: "Ahmed Patel", grade: "8", class: "8A", age: 13, parent_name: "Fatima Patel", parent_cell: "0739876543", score_visual: 5, score_auditory: 8, score_reading: 7, score_kinesthetic: 6, preferred_learning_style: "Auditory" },
+  { name: "Sipho Dlamini", grade: "9", class: "9C", age: 15, parent_name: "Nomsa Dlamini", parent_cell: "0741122334", score_visual: 6, score_auditory: 5, score_reading: 9, score_kinesthetic: 4, preferred_learning_style: "Reading" },
+  { name: "Emily Smith", grade: "10", class: "10B", age: 16, parent_name: "John Smith", parent_cell: "0839988776", score_visual: 7, score_auditory: 6, score_reading: 5, score_kinesthetic: 9, preferred_learning_style: "Kinesthetic" },
+  { name: "Tshepo Nkosi", grade: "8", class: "8A", age: 14, parent_name: "Mpho Nkosi", parent_cell: "0823344556", score_visual: 9, score_auditory: 4, score_reading: 6, score_kinesthetic: 7, preferred_learning_style: "Visual" },
+  { name: "Megan van der Merwe", grade: "9", class: "9C", age: 15, parent_name: "Pieter van der Merwe", parent_cell: "0837654321", score_visual: 4, score_auditory: 7, score_reading: 8, score_kinesthetic: 5, preferred_learning_style: "Reading" },
+  { name: "Zanele Khumalo", grade: "10", class: "10B", age: 16, parent_name: "Sibusiso Khumalo", parent_cell: "0712233445", score_visual: 6, score_auditory: 8, score_reading: 4, score_kinesthetic: 7, preferred_learning_style: "Auditory" },
+  { name: "Dineo Sebe", grade: "8", class: "8A", age: 13, parent_name: "Bongani Sebe", parent_cell: "0841237890", score_visual: 8, score_auditory: 5, score_reading: 7, score_kinesthetic: 6, preferred_learning_style: "Visual" },
+  { name: "Mohamed Essop", grade: "9", class: "9C", age: 15, parent_name: "Ayesha Essop", parent_cell: "0791234567", score_visual: 7, score_auditory: 6, score_reading: 8, score_kinesthetic: 5, preferred_learning_style: "Reading" },
+  { name: "Noluthando Dube", grade: "10", class: "10B", age: 16, parent_name: "Themba Dube", parent_cell: "0787654321", score_visual: 5, score_auditory: 7, score_reading: 6, score_kinesthetic: 8, preferred_learning_style: "Kinesthetic" },
+  { name: "Andile Masuku", grade: "8", class: "8A", age: 14, parent_name: "Grace Masuku", parent_cell: "0719988776", score_visual: 6, score_auditory: 9, score_reading: 4, score_kinesthetic: 7, preferred_learning_style: "Auditory" },
+  { name: "Johan Botha", grade: "9", class: "9C", age: 15, parent_name: "Anika Botha", parent_cell: "0821122334", score_visual: 7, score_auditory: 5, score_reading: 8, score_kinesthetic: 6, preferred_learning_style: "Reading" },
+  { name: "Precious Mthembu", grade: "10", class: "10B", age: 16, parent_name: "Vusi Mthembu", parent_cell: "0733344556", score_visual: 8, score_auditory: 4, score_reading: 7, score_kinesthetic: 5, preferred_learning_style: "Visual" },
+  { name: "Kabelo Molefe", grade: "8", class: "8A", age: 13, parent_name: "Nthabiseng Molefe", parent_cell: "0834455667", score_visual: 5, score_auditory: 8, score_reading: 6, score_kinesthetic: 9, preferred_learning_style: "Kinesthetic" },
+  { name: "Chantal Naidoo", grade: "9", class: "9C", age: 15, parent_name: "Rajesh Naidoo", parent_cell: "0798765432", score_visual: 8, score_auditory: 6, score_reading: 5, score_kinesthetic: 7, preferred_learning_style: "Visual" },
+  { name: "Lucas van Wyk", grade: "10", class: "10B", age: 16, parent_name: "Karen van Wyk", parent_cell: "0825566778", score_visual: 6, score_auditory: 7, score_reading: 8, score_kinesthetic: 4, preferred_learning_style: "Reading" },
+  { name: "Ayanda Zwane", grade: "8", class: "8A", age: 14, parent_name: "Siyabonga Zwane", parent_cell: "0849988776", score_visual: 7, score_auditory: 5, score_reading: 6, score_kinesthetic: 8, preferred_learning_style: "Kinesthetic" },
+  { name: "Jean-Paul Du Plessis", grade: "9", class: "9C", age: 15, parent_name: "Marie Du Plessis", parent_cell: "0712233445", score_visual: 8, score_auditory: 4, score_reading: 7, score_kinesthetic: 6, preferred_learning_style: "Visual" },
+  { name: "Naledi Mahlangu", grade: "10", class: "10B", age: 16, parent_name: "Kagiso Mahlangu", parent_cell: "0737654321", score_visual: 5, score_auditory: 8, score_reading: 7, score_kinesthetic: 6, preferred_learning_style: "Auditory" },
+  { name: "Thulani Ndlovu", grade: "8", class: "8A", age: 13, parent_name: "Zanele Ndlovu", parent_cell: "0829988776", score_visual: 6, score_auditory: 7, score_reading: 5, score_kinesthetic: 8, preferred_learning_style: "Kinesthetic" }
+];
 let sortAsc = true;
-
-async function loadData() {
-  // 1. Try localStorage first
-  let localLearners = localStorage.getItem("learners");
-  if (localLearners) {
-    learners = JSON.parse(localLearners);
-    renderTable();
-  } else {
-    // 2. If not found, load from JSON and save to localStorage
-    const res = await fetch('learners.json');
-    learners = await res.json();
-    localStorage.setItem("learners", JSON.stringify(learners));
-    renderTable();
-  }
-}
 
 function renderTable() {
   const tbody = document.querySelector("#learnerTable tbody");
@@ -155,5 +161,47 @@ function renderChart() {
     data: {
       labels: Object.keys(styleCounts),
       datasets: [{
-        label: "Preferred Learning Style](#)
-
+        label: "Preferred Learning Style Count",
+        data: Object.values(styleCounts),
+        backgroundColor: 'rgba(54, 162, 235, 0.6)'
+      }]
+    },
+    options: {
+      scales: { y: { beginAtZero: true } },
+      plugins: { legend: { display: false } }
+    }
+  });
+}
+
+function sortTable(field) {
+  learners.sort((a, b) => {
+    let nameA = a.name.split(" ").slice(-1)[0].toLowerCase();
+    let nameB = b.name.split(" ").slice(-1)[0].toLowerCase();
+    if (nameA < nameB) return sortAsc ? -1 : 1;
+    if (nameA > nameB) return sortAsc ? 1 : -1;
+    return 0;
+  });
+  sortAsc = !sortAsc;
+  renderTable();
+}
+
+function exportCSV() {
+  const rows = [["Name", "Grade", "Class", "Age", "Parent", "Cell", "Visual", "Auditory", "Reading", "Kinesthetic", "Preferred"]];
+  learners.forEach(l => {
+    rows.push([l.name, l.grade, l.class, l.age, l.parent_name, l.parent_cell, l.score_visual, l.score_auditory, l.score_reading, l.score_kinesthetic, l.preferred_learning_style]);
+  });
+  const csv = rows.map(row => row.join(",")).join("\n");
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "learners.csv";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+renderTable();
+</script>
+
+</body>
+</html>
