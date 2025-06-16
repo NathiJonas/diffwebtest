@@ -71,26 +71,3 @@ if (!localStorage.getItem("loggedIn")) {
   loadData();
 }
 
-// Add this function to script.js
-function addLearner() {
-  const newLearner = {
-    name: document.getElementById('newName').value,
-    grade: document.getElementById('newGrade').value,
-    class: document.getElementById('newClass').value,
-    age: document.getElementById('newAge').value,
-    parent_name: document.getElementById('newParentName').value,
-    parent_cell: document.getElementById('newParentCell').value,
-    score_visual: document.getElementById('newVisual').value,
-    score_auditory: document.getElementById('newAuditory').value,
-    score_reading: document.getElementById('newReading').value,
-    score_kinesthetic: document.getElementById('newKinesthetic').value,
-    preferred_learning_style: document.getElementById('newPreferred').value
-  };
-
-  // Add to the learners array and re-render the table
-  learners.push(newLearner);
-  renderTable();
-
-  // Clear input fields
-  document.querySelectorAll('#addLearnerForm input').forEach(input => input.value = '');
-}
