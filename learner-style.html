@@ -52,6 +52,32 @@
     .analytics-filter {
       margin-bottom: 1em;
     }
+    .support-radio-group {
+      margin: 1em 0 1.5em 0;
+      padding: 1em;
+      background: #f3f5fa;
+      border-radius: 6px;
+      border: 1px solid #dce2ef;
+    }
+    .support-radio-group label {
+      display: block;
+      margin-bottom: 0.45em;
+      font-weight: normal;
+    }
+    .support-radio-group .label {
+      margin-bottom: 0.7em;
+      font-weight: bold;
+      display: block;
+    }
+    .support-radio-group input[type="text"] {
+      display: block;
+      margin-top: 0.4em;
+      width: 98%;
+      padding: 0.3em 0.6em;
+      border-radius: 4px;
+      border: 1px solid #999;
+      font-size: 1em;
+    }
     @media (max-width: 1200px) {
       .grid-container { grid-template-columns: 1fr; }
       .profile-card, .analytics-card { max-width: 100%; }
@@ -116,7 +142,6 @@
       { name: "Johan du Plessis", gender: "Male", languages: ["Afrikaans", "English"], class: "Grade 9C", assessments: { classTest: 59, presentation: 61, project: 60, test1: 58, test2: 66, exam: 70 } }
     ];
 
-    // Utility functions
     function getAverage(a) {
       return Math.round(
         (a.classTest + a.presentation + a.project + a.test1 + a.test2 + a.exam) / 6
@@ -160,6 +185,15 @@
         document.getElementById('styleError').textContent = "";
       }
     }
+    function handleSupportRadio(e) {
+      const val = e.target.value;
+      const otherBox = document.getElementById('supportOtherBox');
+      if (val === 'Other') {
+        otherBox.style.display = 'block';
+      } else {
+        otherBox.style.display = 'none';
+      }
+    }
     function renderProfile() {
       const idx = getSelectedLearnerIndex();
       const learner = learners[idx];
@@ -190,6 +224,17 @@
             </tbody>
           </table>
           <div><span class="label">System Suggests:</span> <span class="selected-style">${systemStyle} learner</span></div>
+          <div class="support-radio-group">
+            <span class="label">Support Needs:</span>
+            <label><input type="radio" name="supportNeeds" value="ELL"> ELL (English Language Learner)</label>
+            <label><input type="radio" name="supportNeeds" value="IEP504"> IEP or 504 Plan</label>
+            <label><input type="radio" name="supportNeeds" value="Executive"> Struggles with executive function</label>
+            <label><input type="radio" name="supportNeeds" value="Assistive"> Needs assistive technology (e.g., TTS, dictation)</label>
+            <label>
+              <input type="radio" name="supportNeeds" value="Other"> Other (Specify)
+              <input type="text" id="supportOtherBox" style="display:none; margin-left:1.5em;" placeholder="Please specify" />
+            </label>
+          </div>
           <hr>
           <div class="grade-group">
             <label class="label" for="gradeLevel">Performance:</label>
@@ -212,6 +257,9 @@
       `;
       document.querySelectorAll('.style-checkbox').forEach(cb =>
         cb.onchange = handleCheckboxLimit
+      );
+      document.getElementsByName('supportNeeds').forEach(rb =>
+        rb.onchange = handleSupportRadio
       );
     }
 
