@@ -43,30 +43,6 @@
       padding: 1.5em;
       position: relative;
     }
-    .profile-actions {
-      display: flex;
-      gap: 0.8em;
-      margin-top: 0;
-      margin-bottom: 1em;
-      justify-content: flex-end;
-      align-items: flex-start;
-      position: absolute;
-      top: 1.5em;
-      right: 1.5em;
-    }
-    .profile-actions button {
-      margin: 0;
-      padding: 0.6em 1.2em;
-      font-size: 1em;
-      border: none;
-      border-radius: 5px;
-      background: #1976d2;
-      color: #fff;
-      cursor: pointer;
-    }
-    .profile-actions button:hover {
-      background: #1565c0;
-    }
     .analytics-card {
       background: #fff;
       border-radius: 8px;
@@ -138,10 +114,49 @@
     .info-list { margin: 0 0 1em 0; }
     .info-list li { margin-bottom: 0.3em; }
     .selected-style { font-weight: bold; }
+    /* Top actions bar styles */
+    .top-actions {
+      position: absolute;
+      top: 2em;
+      right: 2em;
+      display: flex;
+      gap: 0.8em;
+      z-index: 100;
+    }
+    .top-actions button,
+    .top-actions .logout-btn {
+      padding: 0.6em 1.2em;
+      font-size: 1em;
+      border: none;
+      border-radius: 5px;
+      background: #1976d2;
+      color: #fff;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+    .top-actions .logout-btn {
+      background: #d32f2f;
+    }
+    .top-actions button:hover,
+    .top-actions .logout-btn:hover {
+      background: #1565c0;
+    }
+    .top-actions .logout-btn:hover {
+      background: #b71c1c;
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+  <div class="top-actions">
+    <button onclick="saveProfile(getSelectedLearnerIndex())">Save Profile</button>
+    <button onclick="printProfile()">Print</button>
+    <button onclick="exportProfile()">Export (JSON)</button>
+    <button onclick="exportProfileCSV()">Export (CSV)</button>
+    <a href="logout.html" class="logout-btn">Log Out</a>
+  </div>
   <nav>
     <a href="dashboard.html">Dashboard</a> |
     <a href="learner-style.html">Learner Profile</a>
@@ -170,7 +185,7 @@
       { name: "Megan Petersen", gender: "Female", languages: ["Afrikaans", "English"], class: "Grade 9C", assessments: { classTest: 62, presentation: 74, project: 67, test1: 60, test2: 69, exam: 79 } },
       { name: "Riyaad Davids", gender: "Male", languages: ["Afrikaans", "English"], class: "Grade 9C", assessments: { classTest: 77, presentation: 73, project: 75, test1: 79, test2: 80, exam: 83 } },
       { name: "Ayesha Patel", gender: "Female", languages: ["English"], class: "Grade 9C", assessments: { classTest: 91, presentation: 90, project: 88, test1: 89, test2: 93, exam: 94 } },
-      { name: "Thabo Mokoena", gender: "Male", languages: ["Sesotho", "English"], class: "Grade 9C", assessments: { classTest: 55, presentation: 63, project: 57, test1: 51, test2: 60, exam: 65 } },
+      { name: "Thabo Mokoena", gender: "Male", languages: ["Sesotho", "English"], class: " "Grade 9C", assessments: { classTest: 55, presentation: 63, project: 57, test1: 51, test2: 60, exam: 65 } },
       { name: "Jade Smith", gender: "Female", languages: ["English", "Afrikaans"], class: "Grade 9C", assessments: { classTest: 83, presentation: 86, project: 92, test1: 87, test2: 85, exam: 88 } },
       { name: "Nomvula Khumalo", gender: "Female", languages: ["isiZulu"], class: "Grade 9C", assessments: { classTest: 81, presentation: 89, project: 84, test1: 79, test2: 86, exam: 92 } },
       { name: "Anneline Fortuin", gender: "Female", languages: ["Afrikaans", "English"], class: "Grade 9C", assessments: { classTest: 47, presentation: 53, project: 49, test1: 45, test2: 58, exam: 61 } },
@@ -467,12 +482,6 @@
       const systemStyle = getSystemStyle(avg);
       document.getElementById('profile').innerHTML = `
         <div class="profile-card">
-          <div class="profile-actions">
-            <button onclick="saveProfile(${idx})">Save Profile</button>
-            <button onclick="printProfile()">Print</button>
-            <button onclick="exportProfile()">Export (JSON)</button>
-            <button onclick="exportProfileCSV()">Export (CSV)</button>
-          </div>
           <h2>${learner.name}</h2>
           <ul class="info-list">
             <li><span class="label">Gender:</span> ${learner.gender}</li>
