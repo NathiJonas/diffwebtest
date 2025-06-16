@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Learner Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #121212; color: #fff; margin: 0; padding: 20px; }
+    h1 { text-align: center; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { padding: 10px; border: 1px solid #444; text-align: left; }
+    th { cursor: pointer; background-color: #222; }
+    input, select, button { margin: 5px; padding: 5px; background: #333; color: #fff; border: 1px solid #555; border-radius: 4px; }
+    button:hover { background-color: #444; }
+    .controls { display: flex; flex-wrap: wrap; justify-content: space-between; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+
+<h1>Learner Assessment Dashboard</h1>
+
+<div class="controls">
+  <div>
+    <input type="text" id="searchInput" placeholder="Search by name..." onkeyup="renderTable()" />
+    <select id="filterClass" onchange="renderTable()">
+      <option value="">All Classes</option>
+      <option value="8A">8A</option>
+      <option value="9C">9C</option>
+      <option value="10B">10B</option>
+    </select>
+    <button onclick="exportCSV()">Export CSV</button>
+  </div>
+  <button onclick="logout()">Logout</button>
+</div>
+
+<table id="learnerTable">
+  <thead>
+    <tr>
+      <th onclick="sortTable('surname')">Name</th>
+      <th>Grade</th>
+      <th>Class</th>
+      <th>Age</th>
+      <th>Parent</th>
+      <th>Cell</th>
+      <th>Visual</th>
+      <th>Auditory</th>
+      <th>Reading</th>
+      <th>Kinesthetic</th>
+      <th>Preferred</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script>
+let learners = [];
+let sortAsc = true;
+
+async function loadData() {
+  const res = await fetch('learners.json');
+  learners = await res.json();
+  renderTable();
+}
+
+function renderTable() {
+  const tbody = document.querySelector("#learnerTable tbody");
+  const filterClass = document.getElementById("filterClass").value;
+  const search = document.getElementById("searchInput").value.toLowerCase();
+  tbody.innerHTML = "";
+  learners.filter(l => 
+    (!filterClass || l.class === filterClass) &&
+    (!search || l.name.toLowerCase().includes(search))
+  ).forEach(l => {
+    tbody.innerHTML += `
+      <tr>
+        <td contenteditable="true">${l.name}</td>
+        <td>${l.grade}</td>
+        <td>${l.class}</td>
+        <td>${l.age}</td>
+        <td>${l.parent_name}</td>
+        <td>${l.parent_cell}</td>
+        <td>${l.score_visual}</td>
+        <td>${l.score_auditory}</td>
+        <td>${l.score_reading}</td>
+        <td>${l.score_kinesthetic}</td>
+        <td>${l.preferred_learning_style}</td>
+      </tr>`;
+  });
+}
+
+function sortTable(field) {
+  learners.sort((a, b) => {
+    let nameA = a.name.split(" ").slice(-1)[0].toLowerCase();
+    let nameB = b.name.split(" ").slice(-1)[0].toLowerCase();
+    if (nameA < nameB) return sortAsc ? -1 : 1;
+    if (nameA > nameB) return sortAsc ? 1 : -1;
+    return 0;
+  });
+  sortAsc = !sortAsc;
+  renderTable();
+}
+
+function exportCSV() {
+  const rows = [["Name", "Grade", "Class", "Age", "Parent", "Cell", "Visual", "Auditory", "Reading", "Kinesthetic", "Preferred"]];
+  learners.forEach(l => {
+    rows.push([l.name, l.grade, l.class, l.age, l.parent_name, l.parent_cell, l.score_visual, l.score_auditory, l.score_reading, l.score_kinesthetic, l.preferred_learning_style]);
+  });
+  const csv = rows.map(row => row.join(",")).join("\n");
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "learners.csv";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function logout() {
+  localStorage.removeItem("loggedIn");
+  window.location.href = "login.html";
+}
+
+if (!localStorage.getItem("loggedIn")) {
+  window.location.href = "login.html";
+} else {
+  loadData();
+}
+</script>
+
+</body>
+</html>

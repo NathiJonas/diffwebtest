@@ -1,0 +1,41 @@
+[
+  {
+    "name": "Sipho Mokoena",
+    "grade": "8",
+    "class": "8A",
+    "age": 14,
+    "parent_name": "Thandi Mokoena",
+    "parent_cell": "0823456789",
+    "score_visual": 18,
+    "score_auditory": 12,
+    "score_reading": 8,
+    "score_kinesthetic": 15,
+    "preferred_learning_style": "Visual"
+  },
+  {
+    "name": "Naledi Tshabalala",
+    "grade": "9",
+    "class": "9C",
+    "age": 15,
+    "parent_name": "Simon Tshabalala",
+    "parent_cell": "0734567890",
+    "score_visual": 9,
+    "score_auditory": 19,
+    "score_reading": 12,
+    "score_kinesthetic": 11,
+    "preferred_learning_style": "Auditory"
+  },
+  {
+    "name": "Luthando Khumalo",
+    "grade": "10",
+    "class": "10B",
+    "age": 16,
+    "parent_name": "Zanele Khumalo",
+    "parent_cell": "0741234567",
+    "score_visual": 10,
+    "score_auditory": 13,
+    "score_reading": 20,
+    "score_kinesthetic": 14,
+    "preferred_learning_style": "Reading"
+  }
+]
