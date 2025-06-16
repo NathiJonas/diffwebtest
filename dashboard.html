@@ -60,6 +60,7 @@
       <option value="10B">10B</option>
     </select>
     <button onclick="exportCSV()">Export CSV</button>
+    <button onclick="window.location.href='add-row.html'">Add Row</button>
   </div>
   <button onclick="window.location.href='logout.html'" id="logoutBtn">Logout</button>
 </div>
@@ -188,15 +189,5 @@ function exportCSV() {
 
 function logout() {
   localStorage.removeItem("loggedIn");
-  window.location.href = "login.html";
-}
-
-if (!localStorage.getItem("loggedIn")) {
-  window.location.href = "login.html";
-} else {
-  loadData();
-}
-</script>
-
-</body>
-</html>
+  window.location.href
+
