@@ -78,6 +78,26 @@
       border: 1px solid #999;
       font-size: 1em;
     }
+    .assessment-options, .below-options {
+      margin: 1em 0 1.5em 0;
+      padding: 1em;
+      background: #f1f6ec;
+      border-radius: 6px;
+      border: 1px solid #c8e6c9;
+    }
+    .assessment-options .label, .below-options .label {
+      margin-bottom: 0.7em;
+      font-weight: bold;
+      display: block;
+    }
+    .assessment-options label, .below-options label {
+      display: block;
+      margin-bottom: 0.45em;
+      font-weight: normal;
+    }
+    .assessment-options input[type="checkbox"], .below-options input[type="checkbox"] {
+      margin-right: 0.5em;
+    }
     @media (max-width: 1200px) {
       .grid-container { grid-template-columns: 1fr; }
       .profile-card, .analytics-card { max-width: 100%; }
@@ -198,6 +218,51 @@
         document.getElementById('styleError').textContent = "";
       }
     }
+    function handleAssessmentCheckboxLimit(e) {
+      const assessmentCheckboxes = document.querySelectorAll('.assessment-checkbox');
+      const checked = Array.from(assessmentCheckboxes).filter(cb => cb.checked);
+      if (checked.length > 2) {
+        e.target.checked = false;
+        document.getElementById('assessmentError').textContent = "You can select at most two assessment options.";
+      } else {
+        document.getElementById('assessmentError').textContent = "";
+      }
+    }
+    function handleBelowCheckboxLimit(e) {
+      const belowCheckboxes = document.querySelectorAll('.below-checkbox');
+      const checked = Array.from(belowCheckboxes).filter(cb => cb.checked);
+      if (checked.length > 2) {
+        e.target.checked = false;
+        document.getElementById('belowError').textContent = "You can select at most two support options.";
+      } else {
+        document.getElementById('belowError').textContent = "";
+      }
+    }
+    function handleAssessmentDisplay() {
+      const perf = document.getElementById('gradeLevel').value;
+      const assessmentDiv = document.getElementById('assessmentOptions');
+      const belowDiv = document.getElementById('belowOptions');
+      if (perf === "At Grade Level" || perf === "Above Grade Level") {
+        assessmentDiv.style.display = 'block';
+        belowDiv.style.display = 'none';
+        // Uncheck below checkboxes and clear error
+        document.querySelectorAll('.below-checkbox').forEach(cb => cb.checked = false);
+        document.getElementById('belowError').textContent = "";
+      } else if (perf === "Below Grade Level") {
+        assessmentDiv.style.display = 'none';
+        belowDiv.style.display = 'block';
+        // Uncheck assessment checkboxes and clear error
+        document.querySelectorAll('.assessment-checkbox').forEach(cb => cb.checked = false);
+        document.getElementById('assessmentError').textContent = "";
+      } else {
+        assessmentDiv.style.display = 'none';
+        belowDiv.style.display = 'none';
+        document.querySelectorAll('.below-checkbox').forEach(cb => cb.checked = false);
+        document.querySelectorAll('.assessment-checkbox').forEach(cb => cb.checked = false);
+        document.getElementById('belowError').textContent = "";
+        document.getElementById('assessmentError').textContent = "";
+      }
+    }
     function renderProfile() {
       const idx = getSelectedLearnerIndex();
       const learner = learners[idx];
@@ -250,6 +315,25 @@
               <option value="Below Grade Level">Below Grade Level</option>
             </select>
           </div>
+          <div id="assessmentOptions" class="assessment-options" style="display:none;">
+            <span class="label">Assessment Options (Select up to 2):</span>
+            <label><input type="checkbox" class="assessment-checkbox" value="Project-based assessment"> Project-based assessment</label>
+            <label><input type="checkbox" class="assessment-checkbox" value="Oral presentation"> Oral presentation</label>
+            <label><input type="checkbox" class="assessment-checkbox" value="Choice board or menu assessment"> Choice board or menu assessment</label>
+            <label><input type="checkbox" class="assessment-checkbox" value="Peer teaching or mentoring"> Peer teaching or mentoring</label>
+            <label><input type="checkbox" class="assessment-checkbox" value="Self-reflection/journalling"> Self-reflection/journalling</label>
+            <div id="assessmentError" class="error"></div>
+          </div>
+          <div id="belowOptions" class="below-options" style="display:none;">
+            <span class="label">Support Options (Select up to 2):</span>
+            <label><input type="checkbox" class="below-checkbox" value="Scaffolded checklist or rubric"> Scaffolded checklist or rubric</label>
+            <label><input type="checkbox" class="below-checkbox" value="Exit slips or daily formative checks"> Exit slips or daily formative checks</label>
+            <label><input type="checkbox" class="below-checkbox" value="Think alouds or guided practice"> Think alouds or guided practice</label>
+            <label><input type="checkbox" class="below-checkbox" value="Visual supports (Graphic organizers, diagrams)"> Visual supports (Graphic organizers, diagrams)</label>
+            <label><input type="checkbox" class="below-checkbox" value="Physical/hands on tasks"> Physical/hands on tasks</label>
+            <label><input type="checkbox" class="below-checkbox" value="Extra time or modified instructions"> Extra time or modified instructions</label>
+            <div id="belowError" class="error"></div>
+          </div>
           <div class="style-group">
             <div class="label">Teacher: Select up to 2 learning styles</div>
             <label><input type="checkbox" class="style-checkbox" value="Auditory"> Auditory</label>
@@ -266,6 +350,14 @@
       document.querySelectorAll('.support-checkbox').forEach(cb =>
         cb.onchange = handleSupportCheckboxLimit
       );
+      document.querySelectorAll('.assessment-checkbox').forEach(cb =>
+        cb.onchange = handleAssessmentCheckboxLimit
+      );
+      document.querySelectorAll('.below-checkbox').forEach(cb =>
+        cb.onchange = handleBelowCheckboxLimit
+      );
+      const gradeLevel = document.getElementById('gradeLevel');
+      gradeLevel.onchange = handleAssessmentDisplay;
     }
 
     // 3. Render analytics chart
@@ -333,8 +425,8 @@
             datasets: [{
               data: Object.values(genderCounts),
               backgroundColor: [
-                'rgba(244, 143, 177, 0.7)', // Pink
-                'rgba(66, 165, 245, 0.7)'   // Blue
+                'rgba(244, 143, 177, 0.7)',
+                'rgba(66, 165, 245, 0.7)'
               ]
             }]
           },
