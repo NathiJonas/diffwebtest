@@ -30,7 +30,21 @@
   </div>
   <button onclick="logout()">Logout</button>
 </div>
-
+<!-- Add Learner Form: Place this above your table -->
+<div id="addLearnerForm" style="margin-bottom: 16px;">
+  <input type="text" id="newName" placeholder="Name">
+  <input type="text" id="newGrade" placeholder="Grade">
+  <input type="text" id="newClass" placeholder="Class">
+  <input type="number" id="newAge" placeholder="Age">
+  <input type="text" id="newParentName" placeholder="Parent Name">
+  <input type="text" id="newParentCell" placeholder="Parent Cell">
+  <input type="number" id="newVisual" placeholder="Visual">
+  <input type="number" id="newAuditory" placeholder="Auditory">
+  <input type="number" id="newReading" placeholder="Reading">
+  <input type="number" id="newKinesthetic" placeholder="Kinesthetic">
+  <input type="text" id="newPreferred" placeholder="Preferred Style">
+  <button onclick="addLearner()">Add Learner</button>
+</div>
 <table id="learnerTable">
   <thead>
     <tr>
