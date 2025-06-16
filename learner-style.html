@@ -8,20 +8,23 @@
     nav { margin-bottom: 1.5em; }
     nav a { margin-right: 1em; text-decoration: none; color: #333; }
     h1 { color: #1a237e; }
+
     .flex-container {
       display: flex;
       align-items: flex-start;
       gap: 2em;
       margin-top: 2em;
     }
+
     .radio-list {
-      min-width: 200px;
+      min-width: 220px;
+      max-width: 250px;
       background: #fff;
       border-radius: 8px;
       box-shadow: 0 2px 8px #0001;
       padding: 1.2em 1em;
-      margin-top: 0;
       height: fit-content;
+      flex-shrink: 0;
     }
     .radio-list .label {
       display: block;
@@ -35,12 +38,15 @@
       font-weight: normal;
       cursor: pointer;
     }
+
     .profile-card {
       background: #fff;
       border-radius: 8px;
       box-shadow: 0 2px 8px #0001;
-      max-width: 460px;
+      max-width: 520px;
+      width: 100%;
       padding: 1.5em;
+      flex: 1;
     }
     .label { font-weight: bold; }
     .marks-table { width: 100%; margin-bottom: 1em; border-collapse: collapse; }
@@ -55,7 +61,7 @@
     @media (max-width: 900px) {
       .flex-container { flex-direction: column; gap: 1em; }
       .profile-card { max-width: 100%; }
-      .radio-list { width: 100%; min-width: unset; }
+      .radio-list { width: 100%; min-width: unset; max-width: unset; }
     }
   </style>
 </head>
