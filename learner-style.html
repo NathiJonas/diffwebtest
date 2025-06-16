@@ -2,40 +2,39 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Find Learner's Learning Style</title>
+  <title>Learner Profile</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 2rem; background: #f8f9fa; }
     h1 { color: #1a237e; }
     nav { margin-bottom: 1.5em; }
     nav a { margin-right: 1em; text-decoration: none; color: #333; }
-    .info { margin: 1.5rem 0; font-size: 1.1em; }
-    select, button { font-size: 1em; padding: 0.4em; }
-    .card {
+    .profile-card {
       background: #fff; border-radius: 8px; box-shadow: 0 2px 8px #0001;
-      max-width: 400px; padding: 1.5em; margin: 1.5em auto;
+      max-width: 420px; padding: 1.5em; margin: 2em auto;
     }
-    .visual { background: #c8e6c9; }
-    .auditory { background: #fff9c4; }
-    .kinesthetic { background: #ffe0b2; }
     .label { font-weight: bold; }
+    .info-list { margin: 0 0 1em 0; }
+    .info-list li { margin-bottom: 0.3em; }
+    .marks-table { width: 100%; margin-bottom: 1em; border-collapse: collapse; }
+    .marks-table th, .marks-table td { border: 1px solid #ccc; padding: 0.5em; text-align: center; }
+    .marks-table th { background: #e3e6f3; }
+    .grade-group, .style-group { margin: 1em 0; }
+    .style-group label { margin-right: 1em; }
     .small { font-size: .92em; color: #444; }
+    .selected-style { font-weight: bold; }
+    .error { color: red; font-size: 0.95em; }
   </style>
 </head>
 <body>
   <nav>
     <a href="dashboard.html">Dashboard</a> |
-    <a href="learner-style.html">Learner Decision Tree</a>
+    <a href="learner-style.html">Learner Profile</a>
   </nav>
-  <h1>Find a Learner's Learning Style</h1>
-  <div class="info">
-    Select a learner to see their assessment marks and suggested learning style.<br>
-    <span class="small">Decision tree: Visual (avg ≥ 80), Auditory (60–79), Kinesthetic (&lt;60)</span>
-  </div>
-  <label for="learnerSelect" class="label">Learner:</label>
+  <h1>Learner Profile</h1>
+  <label for="learnerSelect" class="label">Select Learner:</label>
   <select id="learnerSelect"></select>
-  <button onclick="showStyle()">Show Learning Style</button>
 
-  <div id="result"></div>
+  <div id="profile"></div>
 
   <script>
     // --- The learner dataset ---
@@ -91,42 +90,55 @@
       select.appendChild(opt);
     });
 
-    function getLearningStyle(avg) {
-      if (avg >= 80) return { style: "Visual", class: "visual" };
-      if (avg >= 60) return { style: "Auditory", class: "auditory" };
-      return { style: "Kinesthetic", class: "kinesthetic" };
+    // Allow only two checkboxes selected
+    function handleCheckboxLimit(e) {
+      const styleCheckboxes = document.querySelectorAll('.style-checkbox');
+      const checked = Array.from(styleCheckboxes).filter(cb => cb.checked);
+      if (checked.length > 2) {
+        e.target.checked = false;
+        document.getElementById('styleError').textContent = "You can select at most two learning styles.";
+      } else {
+        document.getElementById('styleError').textContent = "";
+      }
     }
 
-    function showStyle() {
+    function renderProfile() {
       const idx = select.value;
       const learner = learners[idx];
       const a = learner.assessments;
       const avg = Math.round((a.classTest + a.presentation + a.project + a.test1 + a.test2 + a.exam) / 6);
-      const { style, class: styleClass } = getLearningStyle(avg);
 
-      document.getElementById('result').innerHTML = `
-        <div class="card ${styleClass}">
+      // Decision tree
+      let systemStyle = "";
+      if (avg >= 80) systemStyle = "Visual";
+      else if (avg >= 60) systemStyle = "Auditory";
+      else systemStyle = "Kinesthetic";
+
+      document.getElementById('profile').innerHTML = `
+        <div class="profile-card">
           <h2>${learner.name}</h2>
-          <p><span class="label">Gender:</span> ${learner.gender}</p>
-          <p><span class="label">Languages:</span> ${learner.languages.join(', ')}</p>
-          <p><span class="label">Class:</span> ${learner.class}</p>
-          <hr>
-          <p>
-            <span class="label">Class Test:</span> ${a.classTest} <br>
-            <span class="label">Presentation:</span> ${a.presentation} <br>
-            <span class="label">Project:</span> ${a.project} <br>
-            <span class="label">Test 1:</span> ${a.test1} <br>
-            <span class="label">Test 2:</span> ${a.test2} <br>
-            <span class="label">Exam:</span> ${a.exam} <br>
-            <span class="label">Average:</span> <b>${avg}</b>
-          </p>
-          <h3>Learning Style: <span>${style}</span></h3>
-        </div>
-      `;
-    }
-
-    // Show first learner by default
-    showStyle();
-  </script>
-</body>
-</html>
+          <ul class="info-list">
+            <li><span class="label">Gender:</span> ${learner.gender}</li>
+            <li><span class="label">Languages:</span> ${learner.languages.join(', ')}</li>
+            <li><span class="label">Class:</span> ${learner.class}</li>
+          </ul>
+          <table class="marks-table">
+            <thead>
+              <tr>
+                <th>Class Test</th>
+                <th>Presentation</th>
+                <th>Project</th>
+                <th>Test 1</th>
+                <th>Test 2</th>
+                <th>Exam</th>
+                <th>Average</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>${a.classTest}</td>
+                <td>${a.presentation}</td>
+                <td>${a.project}</td>
+                <td>${a.test1}</td>
+                <td`
+
