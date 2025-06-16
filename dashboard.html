@@ -1,207 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Learner Dashboard</title>
-  <style>
-    body { font-family: Arial, sans-serif; background-color: #121212; color: #fff; margin: 0; padding: 20px; }
-    h1 { text-align: center; }
-
-    .dashboard-flex {
-      display: flex;
-      gap: 32px;
-      align-items: flex-start;
-    }
-
-    table {
-      width: 50%;            
-      border-collapse: collapse;
-      margin-top: 20px;
-      font-size: 0.75em;     
-      max-width: 400px;
-      min-width: 180px;
-    }
-
-    th, td {
-      padding: 5px;          
-      border: 1px solid #444;
-      text-align: left;
-    }
-
-    th { cursor: pointer; background-color: #222; }
-
-    input, select, button { margin: 5px; padding: 5px; background: #333; color: #fff; border: 1px solid #555; border-radius: 4px; }
-    button:hover { background-color: #444; }
-    .controls { display: flex; flex-wrap: wrap; justify-content: space-between; margin-bottom: 10px; }
-
-    .chart-container {
-      width: 400px;
-      min-width: 240px;
-      height: 320px;
-      background: #1a1a1a;
-      border-radius: 8px;
-      padding: 16px;
-      box-sizing: border-box;
-      display: flex;
-      align-items: center;
-    }
-  </style> 
+    <meta charset="UTF-8">
+    <title>Learning Style Decision Tree</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; }
+        .result { font-weight: bold; margin-top: 1rem; }
+    </style>
+    <script>
+        function determineLearningStyle() {
+            const marks = parseInt(document.getElementById('marks').value, 10);
+            let style = "";
+            if (marks >= 80) {
+                style = "Visual Learner";
+            } else if (marks >= 60) {
+                style = "Auditory Learner";
+            } else {
+                style = "Kinesthetic Learner";
+            }
+            document.getElementById('output').textContent = 
+                "Based on your marks, you may be more comfortable with: " + style;
+        }
+    </script>
 </head>
 <body>
-
-<h1>Learner Assessment Dashboard</h1>
-
-<div class="controls">
-  <div>
-    <input type="text" id="searchInput" placeholder="Search by name..." onkeyup="renderTable()" />
-    <select id="filterClass" onchange="renderTable()">
-      <option value="">All Classes</option>
-      <option value="8A">8A</option>
-      <option value="9C">9C</option>
-      <option value="10B">10B</option>
-    </select>
-    <button onclick="exportCSV()">Export CSV</button>
-    <!-- <button onclick="window.location.href='add-row.html'">Add Row</button> -->
-  </div>
-  <button onclick="window.location.href='logout.html'" id="logoutBtn">Logout</button>
-</div>
-<div class="dashboard-flex">
-  <table id="learnerTable">
-    <thead>
-      <tr>
-        <th onclick="sortTable('surname')">Name</th>
-        <th>Grade</th>
-        <th>Class</th>
-        <th>Age</th>
-        <th>Parent</th>
-        <th>Cell</th>
-        <th>Visual</th>
-        <th>Auditory</th>
-        <th>Reading</th>
-        <th>Kinesthetic</th>
-        <th>Preferred</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-  <div class="chart-container">
-    <canvas id="learnerChart"></canvas>
-  </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-let learners = [
-  { name: "Lerato Mokoena", grade: "8", class: "8A", age: 14, parent_name: "Thabo Mokoena", parent_cell: "0721234567", score_visual: 8, score_auditory: 7, score_reading: 5, score_kinesthetic: 6, preferred_learning_style: "Visual" },
-  { name: "Ahmed Patel", grade: "8", class: "8A", age: 13, parent_name: "Fatima Patel", parent_cell: "0739876543", score_visual: 5, score_auditory: 8, score_reading: 7, score_kinesthetic: 6, preferred_learning_style: "Auditory" },
-  { name: "Sipho Dlamini", grade: "9", class: "9C", age: 15, parent_name: "Nomsa Dlamini", parent_cell: "0741122334", score_visual: 6, score_auditory: 5, score_reading: 9, score_kinesthetic: 4, preferred_learning_style: "Reading" },
-  { name: "Emily Smith", grade: "10", class: "10B", age: 16, parent_name: "John Smith", parent_cell: "0839988776", score_visual: 7, score_auditory: 6, score_reading: 5, score_kinesthetic: 9, preferred_learning_style: "Kinesthetic" },
-  { name: "Tshepo Nkosi", grade: "8", class: "8A", age: 14, parent_name: "Mpho Nkosi", parent_cell: "0823344556", score_visual: 9, score_auditory: 4, score_reading: 6, score_kinesthetic: 7, preferred_learning_style: "Visual" },
-  { name: "Megan van der Merwe", grade: "9", class: "9C", age: 15, parent_name: "Pieter van der Merwe", parent_cell: "0837654321", score_visual: 4, score_auditory: 7, score_reading: 8, score_kinesthetic: 5, preferred_learning_style: "Reading" },
-  { name: "Zanele Khumalo", grade: "10", class: "10B", age: 16, parent_name: "Sibusiso Khumalo", parent_cell: "0712233445", score_visual: 6, score_auditory: 8, score_reading: 4, score_kinesthetic: 7, preferred_learning_style: "Auditory" },
-  { name: "Dineo Sebe", grade: "8", class: "8A", age: 13, parent_name: "Bongani Sebe", parent_cell: "0841237890", score_visual: 8, score_auditory: 5, score_reading: 7, score_kinesthetic: 6, preferred_learning_style: "Visual" },
-  { name: "Mohamed Essop", grade: "9", class: "9C", age: 15, parent_name: "Ayesha Essop", parent_cell: "0791234567", score_visual: 7, score_auditory: 6, score_reading: 8, score_kinesthetic: 5, preferred_learning_style: "Reading" },
-  { name: "Noluthando Dube", grade: "10", class: "10B", age: 16, parent_name: "Themba Dube", parent_cell: "0787654321", score_visual: 5, score_auditory: 7, score_reading: 6, score_kinesthetic: 8, preferred_learning_style: "Kinesthetic" },
-  { name: "Andile Masuku", grade: "8", class: "8A", age: 14, parent_name: "Grace Masuku", parent_cell: "0719988776", score_visual: 6, score_auditory: 9, score_reading: 4, score_kinesthetic: 7, preferred_learning_style: "Auditory" },
-  { name: "Johan Botha", grade: "9", class: "9C", age: 15, parent_name: "Anika Botha", parent_cell: "0821122334", score_visual: 7, score_auditory: 5, score_reading: 8, score_kinesthetic: 6, preferred_learning_style: "Reading" },
-  { name: "Precious Mthembu", grade: "10", class: "10B", age: 16, parent_name: "Vusi Mthembu", parent_cell: "0733344556", score_visual: 8, score_auditory: 4, score_reading: 7, score_kinesthetic: 5, preferred_learning_style: "Visual" },
-  { name: "Kabelo Molefe", grade: "8", class: "8A", age: 13, parent_name: "Nthabiseng Molefe", parent_cell: "0834455667", score_visual: 5, score_auditory: 8, score_reading: 6, score_kinesthetic: 9, preferred_learning_style: "Kinesthetic" },
-  { name: "Chantal Naidoo", grade: "9", class: "9C", age: 15, parent_name: "Rajesh Naidoo", parent_cell: "0798765432", score_visual: 8, score_auditory: 6, score_reading: 5, score_kinesthetic: 7, preferred_learning_style: "Visual" },
-  { name: "Lucas van Wyk", grade: "10", class: "10B", age: 16, parent_name: "Karen van Wyk", parent_cell: "0825566778", score_visual: 6, score_auditory: 7, score_reading: 8, score_kinesthetic: 4, preferred_learning_style: "Reading" },
-  { name: "Ayanda Zwane", grade: "8", class: "8A", age: 14, parent_name: "Siyabonga Zwane", parent_cell: "0849988776", score_visual: 7, score_auditory: 5, score_reading: 6, score_kinesthetic: 8, preferred_learning_style: "Kinesthetic" },
-  { name: "Jean-Paul Du Plessis", grade: "9", class: "9C", age: 15, parent_name: "Marie Du Plessis", parent_cell: "0712233445", score_visual: 8, score_auditory: 4, score_reading: 7, score_kinesthetic: 6, preferred_learning_style: "Visual" },
-  { name: "Naledi Mahlangu", grade: "10", class: "10B", age: 16, parent_name: "Kagiso Mahlangu", parent_cell: "0737654321", score_visual: 5, score_auditory: 8, score_reading: 7, score_kinesthetic: 6, preferred_learning_style: "Auditory" },
-  { name: "Thulani Ndlovu", grade: "8", class: "8A", age: 13, parent_name: "Zanele Ndlovu", parent_cell: "0829988776", score_visual: 6, score_auditory: 7, score_reading: 5, score_kinesthetic: 8, preferred_learning_style: "Kinesthetic" }
-];
-let sortAsc = true;
-
-function renderTable() {
-  const tbody = document.querySelector("#learnerTable tbody");
-  const filterClass = document.getElementById("filterClass").value;
-  const search = document.getElementById("searchInput").value.toLowerCase();
-  tbody.innerHTML = "";
-  learners.filter(l => 
-    (!filterClass || l.class === filterClass) &&
-    (!search || l.name.toLowerCase().includes(search))
-  ).forEach(l => {
-    tbody.innerHTML += `
-      <tr>
-        <td contenteditable="true">${l.name}</td>
-        <td>${l.grade}</td>
-        <td>${l.class}</td>
-        <td>${l.age}</td>
-        <td>${l.parent_name}</td>
-        <td>${l.parent_cell}</td>
-        <td>${l.score_visual}</td>
-        <td>${l.score_auditory}</td>
-        <td>${l.score_reading}</td>
-        <td>${l.score_kinesthetic}</td>
-        <td>${l.preferred_learning_style}</td>
-      </tr>`;
-  });
-  renderChart();
-}
-
-function renderChart() {
-  const ctx = document.getElementById('learnerChart').getContext('2d');
-  if (window.learnerChart) window.learnerChart.destroy();
-
-  const filterClass = document.getElementById("filterClass").value;
-  const search = document.getElementById("searchInput").value.toLowerCase();
-  const styleCounts = {};
-  learners.filter(l =>
-    (!filterClass || l.class === filterClass) &&
-    (!search || l.name.toLowerCase().includes(search))
-  ).forEach(l => {
-    const style = l.preferred_learning_style || "Unknown";
-    styleCounts[style] = (styleCounts[style] || 0) + 1;
-  });
-
-  window.learnerChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: Object.keys(styleCounts),
-      datasets: [{
-        label: "Preferred Learning Style Count",
-        data: Object.values(styleCounts),
-        backgroundColor: 'rgba(54, 162, 235, 0.6)'
-      }]
-    },
-    options: {
-      scales: { y: { beginAtZero: true } },
-      plugins: { legend: { display: false } }
-    }
-  });
-}
-
-function sortTable(field) {
-  learners.sort((a, b) => {
-    let nameA = a.name.split(" ").slice(-1)[0].toLowerCase();
-    let nameB = b.name.split(" ").slice(-1)[0].toLowerCase();
-    if (nameA < nameB) return sortAsc ? -1 : 1;
-    if (nameA > nameB) return sortAsc ? 1 : -1;
-    return 0;
-  });
-  sortAsc = !sortAsc;
-  renderTable();
-}
-
-function exportCSV() {
-  const rows = [["Name", "Grade", "Class", "Age", "Parent", "Cell", "Visual", "Auditory", "Reading", "Kinesthetic", "Preferred"]];
-  learners.forEach(l => {
-    rows.push([l.name, l.grade, l.class, l.age, l.parent_name, l.parent_cell, l.score_visual, l.score_auditory, l.score_reading, l.score_kinesthetic, l.preferred_learning_style]);
-  });
-  const csv = rows.map(row => row.join(",")).join("\n");
-  const blob = new Blob([csv], { type: "text/csv" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "learners.csv";
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-renderTable();
-</script>
-
+    <h1>Learning Style Decision Tree</h1>
+    <p>Enter your assessment marks to see your suggested learning style.</p>
+    <input type="number" id="marks" placeholder="Enter marks" min="0" max="100" />
+    <button onclick="determineLearningStyle()">Check Learning Style</button>
+    <div id="output" class="result"></div>
+    <hr>
+    <h2>Decision Tree (Hardcoded Data)</h2>
+    <ul>
+        <li>If marks ≥ 80: Visual Learner</li>
+        <li>If 60 ≤ marks &lt; 80: Auditory Learner</li>
+        <li>If marks &lt; 60: Kinesthetic Learner</li>
+    </ul>
 </body>
 </html>
