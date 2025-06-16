@@ -10,7 +10,7 @@
     h1 { color: #1a237e; }
     .profile-card {
       background: #fff; border-radius: 8px; box-shadow: 0 2px 8px #0001;
-      max-width: 420px; padding: 1.5em; margin: 2em auto;
+      max-width: 460px; padding: 1.5em; margin: 2em auto;
     }
     .label { font-weight: bold; }
     .marks-table { width: 100%; margin-bottom: 1em; border-collapse: collapse; }
@@ -22,6 +22,8 @@
     .info-list { margin: 0 0 1em 0; }
     .info-list li { margin-bottom: 0.3em; }
     .selected-style { font-weight: bold; }
+    .radio-list label { display: block; margin-bottom: 0.25em; }
+    .radio-list { margin-bottom: 1em; }
   </style>
 </head>
 <body>
@@ -30,8 +32,7 @@
     <a href="learner-style.html">Learner Profile</a>
   </nav>
   <h1>Learner Profile</h1>
-  <label for="learnerSelect" class="label">Select Learner:</label>
-  <select id="learnerSelect"></select>
+  <div id="learnerRadioGroup" class="radio-list"></div>
   <div id="profile"></div>
   <script>
     // --- Complete learner dataset ---
@@ -58,19 +59,26 @@
       { name: "Johan du Plessis", gender: "Male", languages: ["Afrikaans", "English"], class: "Grade 9C", assessments: { classTest: 59, presentation: 61, project: 60, test1: 58, test2: 66, exam: 70 } }
     ];
 
-    // Populate select dropdown
-    function populateLearnerSelect() {
-      const select = document.getElementById('learnerSelect');
-      select.innerHTML = '';
+    function populateLearnerRadios() {
+      const group = document.getElementById('learnerRadioGroup');
+      group.innerHTML = '<span class="label">Select Learner:</span><br>';
       learners.forEach((learner, i) => {
-        const opt = document.createElement('option');
-        opt.value = i;
-        opt.textContent = learner.name;
-        select.appendChild(opt);
+        group.innerHTML += `
+          <label>
+            <input type="radio" name="learnerRadio" value="${i}" ${i===0?"checked":""}>
+            ${learner.name}
+          </label>`;
       });
     }
 
-    // Only allow two checkboxes to be selected
+    function getSelectedLearnerIndex() {
+      const radios = document.getElementsByName('learnerRadio');
+      for (let i = 0; i < radios.length; i++) {
+        if (radios[i].checked) return radios[i].value;
+      }
+      return 0;
+    }
+
     function handleCheckboxLimit(e) {
       const styleCheckboxes = document.querySelectorAll('.style-checkbox');
       const checked = Array.from(styleCheckboxes).filter(cb => cb.checked);
@@ -83,8 +91,7 @@
     }
 
     function renderProfile() {
-      const select = document.getElementById('learnerSelect');
-      const idx = select.value;
+      const idx = getSelectedLearnerIndex();
       const learner = learners[idx];
       if (!learner) return;
       const a = learner.assessments;
@@ -136,6 +143,16 @@
           </div>
         </div>
       `;
-      // Re-attach event listeners for checkboxes
-      document.querySelectorAll('.style`
-
+      document.querySelectorAll('.style-checkbox').forEach(cb =>
+        cb.onchange = handleCheckboxLimit
+      );
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      populateLearnerRadios();
+      renderProfile();
+      document.getElementById('learnerRadioGroup').onchange = renderProfile;
+    });
+  </script>
+</body>
+</html>
