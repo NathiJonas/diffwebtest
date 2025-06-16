@@ -4,7 +4,12 @@
   <meta charset="UTF-8">
   <title>Learner Profile & Analytics</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 2rem; background: #f8f9fa; }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+      background: #f8f9fa;
+      padding-top: 4em; /* Ensures content is not hidden under .top-actions */
+    }
     nav { margin-bottom: 1.5em; }
     nav a { margin-right: 1em; text-decoration: none; color: #333; }
     h1 { color: #1a237e; }
@@ -116,8 +121,8 @@
     .selected-style { font-weight: bold; }
     /* Top actions bar styles */
     .top-actions {
-      position: absolute;
-      top: 2em;
+      position: fixed;
+      top: 1.5em;
       right: 2em;
       display: flex;
       gap: 0.8em;
@@ -185,7 +190,7 @@
       { name: "Megan Petersen", gender: "Female", languages: ["Afrikaans", "English"], class: "Grade 9C", assessments: { classTest: 62, presentation: 74, project: 67, test1: 60, test2: 69, exam: 79 } },
       { name: "Riyaad Davids", gender: "Male", languages: ["Afrikaans", "English"], class: "Grade 9C", assessments: { classTest: 77, presentation: 73, project: 75, test1: 79, test2: 80, exam: 83 } },
       { name: "Ayesha Patel", gender: "Female", languages: ["English"], class: "Grade 9C", assessments: { classTest: 91, presentation: 90, project: 88, test1: 89, test2: 93, exam: 94 } },
-      { name: "Thabo Mokoena", gender: "Male", languages: ["Sesotho", "English"], class: " "Grade 9C", assessments: { classTest: 55, presentation: 63, project: 57, test1: 51, test2: 60, exam: 65 } },
+      { name: "Thabo Mokoena", gender: "Male", languages: ["Sesotho", "English"], class: "Grade 9C", assessments: { classTest: 55, presentation: 63, project: 57, test1: 51, test2: 60, exam: 65 } },
       { name: "Jade Smith", gender: "Female", languages: ["English", "Afrikaans"], class: "Grade 9C", assessments: { classTest: 83, presentation: 86, project: 92, test1: 87, test2: 85, exam: 88 } },
       { name: "Nomvula Khumalo", gender: "Female", languages: ["isiZulu"], class: "Grade 9C", assessments: { classTest: 81, presentation: 89, project: 84, test1: 79, test2: 86, exam: 92 } },
       { name: "Anneline Fortuin", gender: "Female", languages: ["Afrikaans", "English"], class: "Grade 9C", assessments: { classTest: 47, presentation: 53, project: 49, test1: 45, test2: 58, exam: 61 } },
