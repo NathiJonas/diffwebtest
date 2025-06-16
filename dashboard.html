@@ -97,5 +97,66 @@
       { name: "Naledi Phiri", gender: "Female", languages: ["Xhosa", "English"], class: "Grade 9C", assessments: { classTest: 85, presentation: 88, project: 86, test1: 82, test2: 87, exam: 91 } },
       { name: "Kaylin Daniels", gender: "Female", languages: ["Afrikaans", "English"], class: "Grade 9C", assessments: { classTest: 74, presentation: 77, project: 72, test1: 46, test2: 79, exam: 80 } },
       { name: "Simphiwe Molefe", gender: "Male", languages: ["isiZulu"], class: "Grade 9C", assessments: { classTest: 61, presentation: 51, project: 67, test1: 63, test2: 69, exam: 41 } },
-      { name: "Xolani Mabuza", gender: "Male", languages: ["isiZulu", "English"], class: "Grade 9C", assessments: { classTest: 53
-
+      { name: "Xolani Mabuza", gender: "Male", languages: ["isiZulu", "English"], class: "Grade 9C", assessments: { classTest: 53, presentation: 57, project: 60, test1: 55, test2: 89, exam: 64 } },
+      { name: "Chantelle Botha", gender: "Female", languages: ["Afrikaans", "English"], class: "Grade 9C", assessments: { classTest: 86, presentation: 90, project: 91, test1: 88, test2: 92, exam: 95 } },
+      { name: "Yusuf Ismail", gender: "Male", languages: ["English"], class: "Grade 9C", assessments: { classTest: 75, presentation: 78, project: 74, test1: 77, test2: 80, exam: 82 } },
+      { name: "Karabo Motsoeneng", gender: "Male", languages: ["Sesotho", "English"], class: "Grade 9C", assessments: { classTest: 68, presentation: 70, project: 55, test1: 66, test2: 73, exam: 78 } },
+      { name: "Johan du Plessis", gender: "Male", languages: ["Afrikaans", "English"], class: "Grade 9C", assessments: { classTest: 59, presentation: 61, project: 60, test1: 58, test2: 66, exam: 70 } }
+    ];
+
+    function getLearningStyle(avg) {
+      if (avg >= 80) return { style: "Visual", class: "visual" };
+      if (avg >= 60) return { style: "Auditory", class: "auditory" };
+      return { style: "Kinesthetic", class: "kinesthetic" };
+    }
+
+    function renderLearners() {
+      const gender = document.getElementById('genderFilter').value;
+      const clazz = document.getElementById('classFilter').value;
+      const avgF = document.getElementById('avgFilter').value;
+      const styleF = document.getElementById('styleFilter').value;
+      const tbody = document.getElementById('learnersBody');
+      tbody.innerHTML = '';
+      learners.forEach(learner => {
+        const a = learner.assessments;
+        const avg = Math.round((a.classTest + a.presentation + a.project + a.test1 + a.test2 + a.exam) / 6);
+        const { style, class: styleClass } = getLearningStyle(avg);
+
+        // Filtering logic
+        if (gender && learner.gender !== gender) return;
+        if (clazz && learner.class !== clazz) return;
+        if (avgF === "80+" && avg < 80) return;
+        if (avgF === "60-79" && (avg < 60 || avg > 79)) return;
+        if (avgF === "<60" && avg >= 60) return;
+        if (styleF && style !== styleF) return;
+
+        const tr = document.createElement('tr');
+        tr.className = styleClass;
+        tr.innerHTML = `
+          <td>${learner.name}</td>
+          <td>${learner.gender}</td>
+          <td>${learner.languages.join(', ')}</td>
+          <td>${learner.class}</td>
+          <td>${a.classTest}</td>
+          <td>${a.presentation}</td>
+          <td>${a.project}</td>
+          <td>${a.test1}</td>
+          <td>${a.test2}</td>
+          <td>${a.exam}</td>
+          <td><b>${avg}</b></td>
+          <td><b>${style}</b></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    document.getElementById('genderFilter').onchange = renderLearners;
+    document.getElementById('classFilter').onchange = renderLearners;
+    document.getElementById('avgFilter').onchange = renderLearners;
+    document.getElementById('styleFilter').onchange = renderLearners;
+
+    // Render table on page load
+    renderLearners();
+  </script>
+</body>
+</html>
