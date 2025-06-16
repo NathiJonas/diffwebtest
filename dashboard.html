@@ -30,9 +30,9 @@
   </div>
   <button onclick="window.location.href='logout.html'" id="logoutBtn">Logout</button>
 </div>
-
-<table id="learnerTable">
-  <thead>
+<div class="dashboard-flex">
+  <table id="learnerTable">
+    <thead>
     <tr>
       <th onclick="sortTable('surname')">Name</th>
       <th>Grade</th>
@@ -48,7 +48,11 @@
     </tr>
   </thead>
   <tbody></tbody>
-</table>
+  </table>
+  <div class="chart-container">
+    <canvas id="learnerChart"></canvas>
+  </div>
+</div>
 
 <script>
 let learners = [];
