@@ -3,52 +3,48 @@
 <head>
   <title>Learner Dashboard</title>
   <style>
-   body { font-family: Arial, sans-serif; background-color: #121212; color: #fff; margin: 0; padding: 20px; }
-h1 { text-align: center; }
+    body { font-family: Arial, sans-serif; background-color: #121212; color: #fff; margin: 0; padding: 20px; }
+    h1 { text-align: center; }
 
-/* NEW: Flex layout for table and chart */
-.dashboard-flex {
-  display: flex;
-  gap: 32px;
-  align-items: flex-start;
-}
+    .dashboard-flex {
+      display: flex;
+      gap: 32px;
+      align-items: flex-start;
+    }
 
-/* CHANGED: Halve table width and font size */
-table {
-  width: 50%;            
-  border-collapse: collapse;
-  margin-top: 20px;
-  font-size: 0.75em;     
-  max-width: 400px;
-  min-width: 180px;
-}
+    table {
+      width: 50%;            
+      border-collapse: collapse;
+      margin-top: 20px;
+      font-size: 0.75em;     
+      max-width: 400px;
+      min-width: 180px;
+    }
 
-/* CHANGED: Halve cell padding */
-th, td {
-  padding: 5px;          
-  border: 1px solid #444;
-  text-align: left;
-}
+    th, td {
+      padding: 5px;          
+      border: 1px solid #444;
+      text-align: left;
+    }
 
-th { cursor: pointer; background-color: #222; }
+    th { cursor: pointer; background-color: #222; }
 
-input, select, button { margin: 5px; padding: 5px; background: #333; color: #fff; border: 1px solid #555; border-radius: 4px; }
-button:hover { background-color: #444; }
-.controls { display: flex; flex-wrap: wrap; justify-content: space-between; margin-bottom: 10px; }
+    input, select, button { margin: 5px; padding: 5px; background: #333; color: #fff; border: 1px solid #555; border-radius: 4px; }
+    button:hover { background-color: #444; }
+    .controls { display: flex; flex-wrap: wrap; justify-content: space-between; margin-bottom: 10px; }
 
-/* NEW: Chart container style */
-.chart-container {
-  width: 400px;
-  min-width: 240px;
-  height: 320px;
-  background: #1a1a1a;
-  border-radius: 8px;
-  padding: 16px;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-}
- </style> 
+    .chart-container {
+      width: 400px;
+      min-width: 240px;
+      height: 320px;
+      background: #1a1a1a;
+      border-radius: 8px;
+      padding: 16px;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+    }
+  </style> 
 </head>
 <body>
 
@@ -70,21 +66,21 @@ button:hover { background-color: #444; }
 <div class="dashboard-flex">
   <table id="learnerTable">
     <thead>
-    <tr>
-      <th onclick="sortTable('surname')">Name</th>
-      <th>Grade</th>
-      <th>Class</th>
-      <th>Age</th>
-      <th>Parent</th>
-      <th>Cell</th>
-      <th>Visual</th>
-      <th>Auditory</th>
-      <th>Reading</th>
-      <th>Kinesthetic</th>
-      <th>Preferred</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
+      <tr>
+        <th onclick="sortTable('surname')">Name</th>
+        <th>Grade</th>
+        <th>Class</th>
+        <th>Age</th>
+        <th>Parent</th>
+        <th>Cell</th>
+        <th>Visual</th>
+        <th>Auditory</th>
+        <th>Reading</th>
+        <th>Kinesthetic</th>
+        <th>Preferred</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
   </table>
   <div class="chart-container">
     <canvas id="learnerChart"></canvas>
@@ -102,6 +98,7 @@ async function loadData() {
   renderTable();
 }
 
+// Renders the table and then the chart
 function renderTable() {
   const tbody = document.querySelector("#learnerTable tbody");
   const filterClass = document.getElementById("filterClass").value;
@@ -125,6 +122,40 @@ function renderTable() {
         <td>${l.score_kinesthetic}</td>
         <td>${l.preferred_learning_style}</td>
       </tr>`;
+  });
+  renderChart(); // <-- Make sure this line is present
+}
+
+// Renders a chart of preferred learning styles
+function renderChart() {
+  const ctx = document.getElementById('learnerChart').getContext('2d');
+  if (window.learnerChart) window.learnerChart.destroy();
+
+  const filterClass = document.getElementById("filterClass").value;
+  const search = document.getElementById("searchInput").value.toLowerCase();
+  const styleCounts = {};
+  learners.filter(l =>
+    (!filterClass || l.class === filterClass) &&
+    (!search || l.name.toLowerCase().includes(search))
+  ).forEach(l => {
+    const style = l.preferred_learning_style || "Unknown";
+    styleCounts[style] = (styleCounts[style] || 0) + 1;
+  });
+
+  window.learnerChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: Object.keys(styleCounts),
+      datasets: [{
+        label: "Preferred Learning Style Count",
+        data: Object.values(styleCounts),
+        backgroundColor: 'rgba(54, 162, 235, 0.6)'
+      }]
+    },
+    options: {
+      scales: { y: { beginAtZero: true } },
+      plugins: { legend: { display: false } }
+    }
   });
 }
 
