@@ -5,8 +5,8 @@
   <title>Learner Profile & Analytics</title>
   <style>
     :root {
-      --primary-bg: #e9ecef;     /* Page background */
-      --primary-blue: #1a237e;   /* Nav and main buttons */
+      --primary-bg: #e9ecef;
+      --primary-blue: #1a237e;
       --primary-blue-light: #3949ab;
       --primary-white: #fff;
       --accent-red: #d32f2f;
@@ -19,19 +19,21 @@
       margin: 0;
       padding: 0;
       background: var(--primary-bg);
-      padding-top: 5em;
       min-height: 100vh;
     }
     nav {
       background: var(--primary-blue);
       color: #fff;
       padding: 1em 2em;
-      margin: 0 0 2em 0;
+      margin: 0;
       display: flex;
       align-items: center;
       justify-content: flex-start;
       font-size: 1.1em;
       box-shadow: 0 2px 4px #0002;
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
     nav a {
       color: #fff;
@@ -44,21 +46,13 @@
     nav a:hover {
       color: var(--nav-link-hover);
     }
-    h1 {
-      color: var(--primary-blue);
-      margin-left: 2em;
-      margin-bottom: 1em;
-      margin-top: 0;
-      font-size: 2em;
-      letter-spacing: 0.01em;
-    }
     .top-actions {
-      position: fixed;
-      top: 1.5em;
-      right: 2em;
       display: flex;
       gap: 0.8em;
-      z-index: 100;
+      justify-content: flex-end;
+      align-items: center;
+      background: var(--primary-bg);
+      padding: 1.5em 2em 0.5em 2em;
     }
     .top-actions button,
     .top-actions .logout-btn {
@@ -83,6 +77,14 @@
     }
     .top-actions .logout-btn:hover {
       background: var(--accent-red-dark);
+    }
+    h1 {
+      color: var(--primary-blue);
+      margin-left: 2em;
+      margin-bottom: 1em;
+      margin-top: 0;
+      font-size: 2em;
+      letter-spacing: 0.01em;
     }
     .grid-container {
       display: grid;
@@ -182,6 +184,8 @@
       .grid-container { grid-template-columns: 1fr; }
       .profile-card, .analytics-card { max-width: 100%; }
       .radio-list { width: 100%; }
+      .top-actions { flex-direction: column; align-items: flex-end; }
+      h1, .grid-container { margin-left: 1em; margin-right: 1em; }
     }
     .label { font-weight: bold; color: var(--primary-blue); }
     .marks-table { width: 100%; margin-bottom: 1em; border-collapse: collapse; }
@@ -197,6 +201,10 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+  <nav>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="learner-style.html">Learner Profile</a>
+  </nav>
   <div class="top-actions">
     <button onclick="saveProfile(getSelectedLearnerIndex())">Save Profile</button>
     <button onclick="printProfile()">Print</button>
@@ -204,10 +212,6 @@
     <button onclick="exportProfileCSV()">Export (CSV)</button>
     <a href="logout.html" class="logout-btn">Log Out</a>
   </div>
-  <nav>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="learner-style.html">Learner Profile</a>
-  </nav>
   <h1>Learner Profile & Analytics</h1>
   <div class="grid-container">
     <div id="learnerRadioGroup" class="radio-list"></div>
@@ -224,7 +228,7 @@
       <canvas id="analyticsChart" height="320"></canvas>
     </div>
   </div>
-  <!-- [JS remains unchanged, see previous responses for full script block] -->
-  <!-- ...JS CODE... -->
+  <!-- [JS code remains unchanged] -->
+  <!-- Place your existing script here -->
 </body>
 </html>
