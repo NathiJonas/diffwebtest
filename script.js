@@ -33,6 +33,37 @@ function renderTable() {
   });
 }
 
+function renderChart() {
+  const ctx = document.getElementById('learnerChart').getContext('2d');
+  if (window.learnerChart) window.learnerChart.destroy();
+
+  // Example: count preferred learning styles
+  const styleCounts = {};
+  learners.filter(l => 
+    (!document.getElementById("filterClass").value || l.class === document.getElementById("filterClass").value) &&
+    (!document.getElementById("searchInput").value.toLowerCase() || l.name.toLowerCase().includes(document.getElementById("searchInput").value.toLowerCase()))
+  ).forEach(l => {
+    const style = l.preferred_learning_style || "Unknown";
+    styleCounts[style] = (styleCounts[style] || 0) + 1;
+  });
+
+  window.learnerChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: Object.keys(styleCounts),
+      datasets: [{
+        label: "Preferred Learning Style Count",
+        data: Object.values(styleCounts),
+        backgroundColor: 'rgba(54, 162, 235, 0.6)'
+      }]
+    },
+    options: {
+      scales: { y: { beginAtZero: true } },
+      plugins: { legend: { display: false } }
+    }
+  });
+}
+renderChart();
 function sortTable(field) {
   learners.sort((a, b) => {
     let nameA = a.name.split(" ").slice(-1)[0].toLowerCase();
