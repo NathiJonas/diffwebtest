@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Learner Decision Tree</title>
+  <style>
+    :root {
+      --primary-bg: #e9ecef;
+      --primary-blue: #1a237e;
+      --primary-blue-light: #3949ab;
+      --primary-white: #fff;
+      --accent-red: #d32f2f;
+      --accent-red-dark: #b71c1c;
+      --nav-link-hover: #c5cae9;
+      --card-shadow: 0 2px 8px #0001;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: var(--primary-bg);
+      min-height: 100vh;
+    }
+    nav {
+      background: var(--primary-blue);
+      color: #fff;
+      padding: 1em 2em;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      font-size: 1.1em;
+      box-shadow: 0 2px 4px #0002;
+    }
+    nav a {
+      color: #fff;
+      margin-right: 2em;
+      text-decoration: none;
+      font-weight: bold;
+      letter-spacing: 0.03em;
+      transition: color 0.2s;
+    }
+    nav a:hover {
+      color: var(--nav-link-hover);
+    }
+    .top-actions {
+      display: flex;
+      gap: 0.8em;
+      justify-content: flex-end;
+      align-items: center;
+      background: var(--primary-bg);
+      padding: 1.5em 2em 0.5em 2em;
+      border-bottom: 1px solid #dee2e6;
+    }
+    .top-actions .logout-btn {
+      padding: 0.6em 1.2em;
+      font-size: 1em;
+      border: none;
+      border-radius: 5px;
+      background: var(--accent-red);
+      color: #fff;
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.2s;
+      box-shadow: 0 1px 3px #0002;
+    }
+    .top-actions .logout-btn:hover {
+      background: var(--accent-red-dark);
+    }
+    h1 {
+      color: var(--primary-blue);
+      margin-left: 2em;
+      margin-bottom: 1em;
+      margin-top: 1em;
+      font-size: 2em;
+      letter-spacing: 0.01em;
+    }
+    .tree-card {
+      background: var(--primary-white);
+      border-radius: 8px;
+      box-shadow: var(--card-shadow);
+      padding: 2em 1.5em;
+      margin: 0 2em 2em 2em;
+      max-width: 600px;
+    }
+    .tree-step {
+      margin-bottom: 2em;
+    }
+    .tree-question {
+      font-size: 1.15em;
+      margin-bottom: 1em;
+      color: var(--primary-blue);
+      font-weight: bold;
+    }
+    .tree-options label {
+      display: block;
+      margin-bottom: 0.7em;
+      cursor: pointer;
+    }
+    .tree-result {
+      font-size: 1.15em;
+      margin-top: 2em;
+      font-weight: bold;
+      color: var(--primary-blue-light);
+    }
+    .tree-back {
+      background: var(--primary-bg);
+      border: none;
+      color: var(--primary-blue);
+      margin-top: 1em;
+      cursor: pointer;
+      padding: 0.4em 1em;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+    .tree-back:hover {
+      background: #e3e6f3;
+    }
+    @media (max-width: 700px) {
+      h1, .tree-card { margin-left: 1em; margin-right: 1em; }
+      .top-actions { flex-direction: column; align-items: flex-end; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="learner-style.html">Learner Profile</a>
+    <a href="decision-tree.html">Decision Tree</a>
+  </nav>
+  <div class="top-actions">
+    <a href="logout.html" class="logout-btn">Log Out</a>
+  </div>
+  <h1>Learner Decision Tree</h1>
+  <div class="tree-card" id="treeCard">
+    <!-- Decision tree will be rendered here -->
+  </div>
+  <script>
+    // A sample Decision Tree (customize as needed)
+    // Each step has: question, options [{text, nextStep/result}]
+    const tree = [
+      {
+        question: "Is the learner's average above 80?",
+        options: [
+          { text: "Yes", next: 1 },
+          { text: "No", next: 2 }
+        ]
+      },
+      {
+        question: "Does the learner prefer visual materials?",
+        options: [
+          { text: "Yes", result: "Visual Learner: Use diagrams, charts, and reading/writing." },
+          { text: "No", result: "Auditory Learner: Encourage discussion, oral presentation, listening." }
+        ]
+      },
+      {
+        question: "Is the average above 60?",
+        options: [
+          { text: "Yes", result: "Auditory Learner: Use group work, discussions, and audio resources." },
+          { text: "No", next: 3 }
+        ]
+      },
+      {
+        question: "Does the learner benefit from hands-on tasks?",
+        options: [
+          { text: "Yes", result: "Kinesthetic Learner: Use projects, activities, and physical manipulatives." },
+          { text: "No", result: "Consider alternative supports and differentiated strategies." }
+        ]
+      }
+    ];
+
+    let step = 0, history = [];
+    function renderTree() {
+      const card = document.getElementById('treeCard');
+      card.innerHTML = "";
+      const curr = tree[step];
+      if (!curr) return;
+      const div = document.createElement('div');
+      div.className = 'tree-step';
+      div.innerHTML = `<div class="tree-question">${curr.question}</div>`;
+      const optsDiv = document.createElement('div');
+      optsDiv.className = 'tree-options';
+      curr.options.forEach((opt, i) => {
+        const label = document.createElement('label');
+        const input = document.createElement('input');
+        input.type = 'radio';
+        input.name = 'treeOpt';
+        input.value = i;
+        input.onclick = () => {
+          history.push(step);
+          if (opt.hasOwnProperty('next')) {
+            step = opt.next;
+            renderTree();
+          } else if (opt.hasOwnProperty('result')) {
+            showResult(opt.result);
+          }
+        };
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(" " + opt.text));
+        optsDiv.appendChild(label);
+      });
+      div.appendChild(optsDiv);
+      if (history.length > 0) {
+        const backBtn = document.createElement('button');
+        backBtn.className = 'tree-back';
+        backBtn.innerText = 'Back';
+        backBtn.onclick = () => {
+          step = history.pop();
+          renderTree();
+        };
+        div.appendChild(backBtn);
+      }
+      card.appendChild(div);
+    }
+    function showResult(result) {
+      const card = document.getElementById('treeCard');
+      card.innerHTML = `<div class="tree-result">${result}</div>
+        <button class="tree-back" onclick="restartTree()">Restart</button>`;
+    }
+    function restartTree() {
+      step = 0;
+      history = [];
+      renderTree();
+    }
+    renderTree();
+  </script>
+</body>
+</html>
