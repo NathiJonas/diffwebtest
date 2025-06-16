@@ -153,7 +153,6 @@
       return "Kinesthetic";
     }
 
-    // 1. Render learner radio buttons
     function populateLearnerRadios() {
       const group = document.getElementById('learnerRadioGroup');
       group.innerHTML = '<span class="label">Select Learner:</span>';
@@ -174,8 +173,22 @@
       return 0;
     }
 
-    // 2. Render profile
-    function handleCheckboxLimit(e) {
+    // Only allow up to 2 support checkboxes
+    function handleSupportCheckboxLimit(e) {
+      const checkboxes = document.querySelectorAll('.support-checkbox');
+      const checked = Array.from(checkboxes).filter(cb => cb.checked);
+      if (checked.length > 2) {
+        e.target.checked = false;
+        document.getElementById('supportError').textContent = "You can select at most two support needs.";
+      } else {
+        document.getElementById('supportError').textContent = "";
+      }
+      // Show/hide the Other box
+      const otherChecked = document.getElementById('supportOtherCheck').checked;
+      document.getElementById('supportOtherBox').style.display = otherChecked ? 'block' : 'none';
+    }
+    // Only allow up to 2 learning style checkboxes
+    function handleStyleCheckboxLimit(e) {
       const styleCheckboxes = document.querySelectorAll('.style-checkbox');
       const checked = Array.from(styleCheckboxes).filter(cb => cb.checked);
       if (checked.length > 2) {
@@ -183,15 +196,6 @@
         document.getElementById('styleError').textContent = "You can select at most two learning styles.";
       } else {
         document.getElementById('styleError').textContent = "";
-      }
-    }
-    function handleSupportRadio(e) {
-      const val = e.target.value;
-      const otherBox = document.getElementById('supportOtherBox');
-      if (val === 'Other') {
-        otherBox.style.display = 'block';
-      } else {
-        otherBox.style.display = 'none';
       }
     }
     function renderProfile() {
@@ -225,15 +229,16 @@
           </table>
           <div><span class="label">System Suggests:</span> <span class="selected-style">${systemStyle} learner</span></div>
           <div class="support-radio-group">
-            <span class="label">Support Needs:</span>
-            <label><input type="radio" name="supportNeeds" value="ELL"> ELL (English Language Learner)</label>
-            <label><input type="radio" name="supportNeeds" value="IEP504"> IEP or 504 Plan</label>
-            <label><input type="radio" name="supportNeeds" value="Executive"> Struggles with executive function</label>
-            <label><input type="radio" name="supportNeeds" value="Assistive"> Needs assistive technology (e.g., TTS, dictation)</label>
+            <span class="label">Support Needs (Select up to 2):</span>
+            <label><input type="checkbox" class="support-checkbox" value="ELL"> ELL (English Language Learner)</label>
+            <label><input type="checkbox" class="support-checkbox" value="IEP504"> IEP or 504 Plan</label>
+            <label><input type="checkbox" class="support-checkbox" value="Executive"> Struggles with executive function</label>
+            <label><input type="checkbox" class="support-checkbox" value="Assistive"> Needs assistive technology (e.g., TTS, dictation)</label>
             <label>
-              <input type="radio" name="supportNeeds" value="Other"> Other (Specify)
+              <input type="checkbox" class="support-checkbox" value="Other" id="supportOtherCheck"> Other (Specify)
               <input type="text" id="supportOtherBox" style="display:none; margin-left:1.5em;" placeholder="Please specify" />
             </label>
+            <div id="supportError" class="error"></div>
           </div>
           <hr>
           <div class="grade-group">
@@ -256,10 +261,10 @@
         </div>
       `;
       document.querySelectorAll('.style-checkbox').forEach(cb =>
-        cb.onchange = handleCheckboxLimit
+        cb.onchange = handleStyleCheckboxLimit
       );
-      document.getElementsByName('supportNeeds').forEach(rb =>
-        rb.onchange = handleSupportRadio
+      document.querySelectorAll('.support-checkbox').forEach(cb =>
+        cb.onchange = handleSupportCheckboxLimit
       );
     }
 
