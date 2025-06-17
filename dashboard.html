@@ -5,14 +5,21 @@
   <title>Grade 9C Dashboard – Learner Styles</title>
   <style>
     :root {
-      --primary-bg: #e9ecef;
-      --primary-blue: #1a237e;
-      --primary-blue-light: #3949ab;
-      --primary-white: #fff;
-      --accent-red: #d32f2f;
+      --primary-bg: #181c25;
+      --primary-blue: #90caf9;
+      --primary-blue-light: #42a5f5;
+      --primary-white: #232834;
+      --accent-red: #ff5252;
       --accent-red-dark: #b71c1c;
-      --nav-link-hover: #c5cae9;
-      --card-shadow: 0 2px 8px #0001;
+      --nav-link-hover: #26324a;
+      --card-shadow: 0 2px 8px #0007;
+      --text-color: #f1f1f1;
+      --label-color: #64b5f6;
+      --table-header-bg: #232c3b;
+      --table-header-color: #90caf9;
+      --visual-bg: #31553b;
+      --auditory-bg: #5d5c32;
+      --kinesthetic-bg: #664d33;
     }
     body {
       font-family: Arial, sans-serif;
@@ -20,19 +27,20 @@
       padding: 0;
       background: var(--primary-bg);
       min-height: 100vh;
+      color: var(--text-color);
     }
     nav {
-      background: var(--primary-blue);
-      color: #fff;
+      background: var(--primary-white);
+      color: var(--primary-blue);
       padding: 1em 2em;
       margin: 0;
       display: flex;
       align-items: center;
       font-size: 1.1em;
-      box-shadow: 0 2px 4px #0002;
+      box-shadow: 0 2px 4px #000a;
     }
     nav a {
-      color: #fff;
+      color: var(--primary-blue);
       margin-right: 2em;
       text-decoration: none;
       font-weight: bold;
@@ -49,7 +57,7 @@
       align-items: center;
       background: var(--primary-bg);
       padding: 1.5em 2em 0.5em 2em;
-      border-bottom: 1px solid #dee2e6;
+      border-bottom: 1px solid #232c3b;
     }
     .top-actions .logout-btn {
       padding: 0.6em 1.2em;
@@ -62,7 +70,7 @@
       text-decoration: none;
       font-weight: bold;
       transition: background 0.2s;
-      box-shadow: 0 1px 3px #0002;
+      box-shadow: 0 1px 3px #0007;
     }
     .top-actions .logout-btn:hover {
       background: var(--accent-red-dark);
@@ -81,20 +89,29 @@
       box-shadow: var(--card-shadow);
       padding: 2em 1.5em;
       margin: 0 2em 2em 2em;
+      color: var(--text-color);
     }
-    .small { font-size: 0.92em; color: #555; }
+    .small { font-size: 0.92em; color: #b3b3b3; }
     .filter-group {
       margin: 0 2em 1em 2em;
       padding: 1em;
-      background: #f3f5fa;
+      background: #202637;
       border-radius: 8px;
-      border: 1px solid #dce2ef;
+      border: 1px solid #2a314a;
       display: flex;
       flex-wrap: wrap;
       gap: 1em;
+      color: var(--text-color);
     }
     .filter-group label { margin-right: 0.5em; }
-    .filter-group select { margin-right: 1em; }
+    .filter-group select {
+      margin-right: 1em;
+      background: #181c25;
+      color: var(--text-color);
+      border: 1px solid #444;
+      border-radius: 4px;
+      padding: 0.2em 0.5em;
+    }
     .table-wrap {
       margin: 0 2em 2em 2em;
       overflow-x: auto;
@@ -102,21 +119,26 @@
     table {
       border-collapse: collapse;
       width: 100%;
-      background: #fff;
+      background: var(--primary-white);
       border-radius: 8px;
       overflow: hidden;
       box-shadow: var(--card-shadow);
+      color: var(--text-color);
     }
     th, td {
-      border: 1px solid #ccc;
+      border: 1px solid #333;
       padding: 0.6rem;
       text-align: center;
     }
-    th { background: #e3e6f3; color: var(--primary-blue); }
-    tr:nth-child(even) { background: #f1f4fa; }
-    .visual { background: #c8e6c9; }
-    .auditory { background: #fff9c4; }
-    .kinesthetic { background: #ffe0b2; }
+    th {
+      background: var(--table-header-bg);
+      color: var(--table-header-color);
+    }
+    tr:nth-child(even) { background: #232c3b; }
+    tr:nth-child(odd) { background: #1c2130; }
+    .visual { background: var(--visual-bg) !important; color: #b3ffb3; }
+    .auditory { background: var(--auditory-bg) !important; color: #fff9c4; }
+    .kinesthetic { background: var(--kinesthetic-bg) !important; color: #ffe0b2; }
     @media (max-width: 900px) {
       h1, .dashboard-card, .filter-group, .table-wrap { margin-left: 1em; margin-right: 1em; }
       .top-actions { flex-direction: column; align-items: flex-end; }
@@ -202,7 +224,7 @@
       { name: "Nomvula Khumalo", gender: "Female", languages: ["isiZulu"], class: "Grade 9C", assessments: { classTest: 81, presentation: 89, project: 84, test1: 79, test2: 86, exam: 92 } },
       { name: "Anneline Fortuin", gender: "Female", languages: ["Afrikaans", "English"], class: "Grade 9C", assessments: { classTest: 47, presentation: 53, project: 49, test1: 45, test2: 58, exam: 62 } },
       { name: "Priya Naidoo", gender: "Female", languages: ["English"], class: "Grade 9C", assessments: { classTest: 76, presentation: 80, project: 83, test1: 71, test2: 74, exam: 81 } },
-      { name: "Cameron van der Merwe", gender: "Male", languages: ["Afrikaans", "English"], class: "Grade 9C", assessments: { classTest: 68, presentation: 50, project: 92, test1: 70, test2: 49, exam: 77 } },
+      { name: "Cameron van der Merwe", gender: "Male", languages: ["Afrikaans", "English"], class: "Grade 9C", assessments: { classTest: 68, presentation: 50, project: 92, test1: 70, test2: 49, exam: 81 } },
       { name: "Tshepo Dube", gender: "Male", languages: ["isiZulu", "English"], class: "Grade 9C", assessments: { classTest: 58, presentation: 60, project: 62, test1: 57, test2: 59, exam: 63 } },
       { name: "Naledi Phiri", gender: "Female", languages: ["Xhosa", "English"], class: "Grade 9C", assessments: { classTest: 85, presentation: 88, project: 86, test1: 82, test2: 87, exam: 91 } },
       { name: "Kaylin Daniels", gender: "Female", languages: ["Afrikaans", "English"], class: "Grade 9C", assessments: { classTest: 74, presentation: 77, project: 72, test1: 46, test2: 79, exam: 80 } },
