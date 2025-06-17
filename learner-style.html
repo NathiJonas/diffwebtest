@@ -5,14 +5,19 @@
   <title>Learner Profile & Analytics</title>
   <style>
     :root {
-      --primary-bg: #e9ecef;
-      --primary-blue: #1a237e;
-      --primary-blue-light: #3949ab;
-      --primary-white: #fff;
-      --accent-red: #d32f2f;
+      --primary-bg: #181c25;
+      --primary-blue: #90caf9;
+      --primary-blue-light: #42a5f5;
+      --primary-white: #232834;
+      --accent-red: #ff5252;
       --accent-red-dark: #b71c1c;
-      --nav-link-hover: #c5cae9;
-      --card-shadow: 0 2px 8px #0001;
+      --nav-link-hover: #26324a;
+      --card-shadow: 0 2px 8px #0007;
+      --text-color: #f1f1f1;
+      --label-color: #64b5f6;
+      --table-header-bg: #232c3b;
+      --table-header-color: #90caf9;
+      --error-color: #ff5252;
     }
     body {
       font-family: Arial, sans-serif;
@@ -20,19 +25,20 @@
       padding: 0;
       background: var(--primary-bg);
       min-height: 100vh;
+      color: var(--text-color);
     }
     nav {
-      background: var(--primary-blue);
-      color: #fff;
+      background: var(--primary-white);
+      color: var(--primary-blue);
       padding: 1em 2em;
       margin: 0;
       display: flex;
       align-items: center;
       font-size: 1.1em;
-      box-shadow: 0 2px 4px #0002;
+      box-shadow: 0 2px 4px #000a;
     }
     nav a {
-      color: #fff;
+      color: var(--primary-blue);
       margin-right: 2em;
       text-decoration: none;
       font-weight: bold;
@@ -49,7 +55,7 @@
       align-items: center;
       background: var(--primary-bg);
       padding: 1.5em 2em 0.5em 2em;
-      border-bottom: 1px solid #dee2e6;
+      border-bottom: 1px solid #232c3b;
     }
     .top-actions button,
     .top-actions .logout-btn {
@@ -58,19 +64,21 @@
       border: none;
       border-radius: 5px;
       background: var(--primary-blue);
-      color: #fff;
+      color: #181c25;
       cursor: pointer;
       text-decoration: none;
       font-weight: bold;
       transition: background 0.2s;
-      box-shadow: 0 1px 3px #0002;
+      box-shadow: 0 1px 3px #0007;
     }
     .top-actions button:hover,
     .top-actions .logout-btn:hover {
       background: var(--primary-blue-light);
+      color: #fff;
     }
     .top-actions .logout-btn {
       background: var(--accent-red);
+      color: #fff;
     }
     .top-actions .logout-btn:hover {
       background: var(--accent-red-dark);
@@ -96,6 +104,7 @@
       background: var(--primary-white);
       border-radius: 8px;
       box-shadow: var(--card-shadow);
+      color: var(--text-color);
     }
     .radio-list {
       padding: 1.2em 1em;
@@ -106,7 +115,7 @@
       margin-bottom: 0.6em;
       font-weight: bold;
       font-size: 1.08em;
-      color: var(--primary-blue);
+      color: var(--label-color);
     }
     .radio-list label {
       display: block;
@@ -130,9 +139,9 @@
     .support-radio-group {
       margin: 1em 0 1.5em 0;
       padding: 1em;
-      background: #f3f5fa;
+      background: #202637;
       border-radius: 6px;
-      border: 1px solid #dce2ef;
+      border: 1px solid #2a314a;
     }
     .support-radio-group label {
       display: block;
@@ -143,7 +152,7 @@
       margin-bottom: 0.7em;
       font-weight: bold;
       display: block;
-      color: var(--primary-blue);
+      color: var(--label-color);
     }
     .support-radio-group input[type="text"] {
       display: block;
@@ -151,21 +160,23 @@
       width: 98%;
       padding: 0.3em 0.6em;
       border-radius: 4px;
-      border: 1px solid #999;
+      border: 1px solid #444;
       font-size: 1em;
+      background: #181c25;
+      color: var(--text-color);
     }
     .assessment-options, .below-options {
       margin: 1em 0 1.5em 0;
       padding: 1em;
-      background: #f1f6ec;
+      background: #222c21;
       border-radius: 6px;
-      border: 1px solid #c8e6c9;
+      border: 1px solid #314c32;
     }
     .assessment-options .label, .below-options .label {
       margin-bottom: 0.7em;
       font-weight: bold;
       display: block;
-      color: var(--primary-blue);
+      color: var(--label-color);
     }
     .assessment-options label, .below-options label {
       display: block;
@@ -182,16 +193,26 @@
       .top-actions { flex-direction: column; align-items: flex-end; }
       h1, .grid-container { margin-left: 1em; margin-right: 1em; }
     }
-    .label { font-weight: bold; color: var(--primary-blue); }
+    .label { font-weight: bold; color: var(--label-color); }
     .marks-table { width: 100%; margin-bottom: 1em; border-collapse: collapse; }
-    .marks-table th, .marks-table td { border: 1px solid #ccc; padding: 0.5em; text-align: center; }
-    .marks-table th { background: #e3e6f3; color: var(--primary-blue); }
+    .marks-table th, .marks-table td { border: 1px solid #333; padding: 0.5em; text-align: center; }
+    .marks-table th { background: var(--table-header-bg); color: var(--table-header-color); }
     .grade-group, .style-group { margin: 1em 0; }
     .style-group label { margin-right: 1em; }
-    .error { color: var(--accent-red); font-size: 0.95em; }
+    .error { color: var(--error-color); font-size: 0.95em; }
     .info-list { margin: 0 0 1em 0; }
     .info-list li { margin-bottom: 0.3em; }
-    .selected-style { font-weight: bold; color: var(--primary-blue); }
+    .selected-style { font-weight: bold; color: var(--primary-blue-light); }
+    select, option {
+      background: #181c25;
+      color: var(--text-color);
+      border: 1px solid #444;
+      border-radius: 4px;
+      padding: 0.2em 0.5em;
+    }
+    input[type="checkbox"], input[type="radio"] {
+      accent-color: var(--primary-blue-light);
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -237,7 +258,7 @@
       { name: "Nomvula Khumalo", gender: "Female", languages: ["isiZulu"], class: "Grade 9C", assessments: { classTest: 81, presentation: 89, project: 84, test1: 79, test2: 86, exam: 92 } },
       { name: "Anneline Fortuin", gender: "Female", languages: ["Afrikaans", "English"], class: "Grade 9C", assessments: { classTest: 47, presentation: 53, project: 49, test1: 45, test2: 58, exam: 61 } },
       { name: "Priya Naidoo", gender: "Female", languages: ["English"], class: "Grade 9C", assessments: { classTest: 76, presentation: 80, project: 83, test1: 71, test2: 74, exam: 81 } },
-      { name: "Cameron van der Merwe", gender: "Male", languages: ["Afrikaans", "English"], class: "Grade 9C", assessments: { classTest: 68, presentation: 50, project: 92, test1: 70, test2: 49, exam: 70 } },
+      { name: "Cameron van der Merwe", gender: "Male", languages: ["Afrikaans", "English"], class: "Grade 9C", assessments: { classTest: 68, presentation: 50, project: 92, test1: 70, test2: 49, exam: 81 } },
       { name: "Tshepo Dube", gender: "Male", languages: ["isiZulu", "English"], class: "Grade 9C", assessments: { classTest: 58, presentation: 60, project: 62, test1: 57, test2: 59, exam: 63 } },
       { name: "Naledi Phiri", gender: "Female", languages: ["Xhosa", "English"], class: "Grade 9C", assessments: { classTest: 85, presentation: 88, project: 86, test1: 82, test2: 87, exam: 91 } },
       { name: "Kaylin Daniels", gender: "Female", languages: ["Afrikaans", "English"], class: "Grade 9C", assessments: { classTest: 74, presentation: 77, project: 72, test1: 46, test2: 79, exam: 70 } },
