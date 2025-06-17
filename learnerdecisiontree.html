@@ -5,14 +5,18 @@
   <title>Learner Decision Tree</title>
   <style>
     :root {
-      --primary-bg: #e9ecef;
-      --primary-blue: #1a237e;
-      --primary-blue-light: #3949ab;
-      --primary-white: #fff;
-      --accent-red: #d32f2f;
+      --primary-bg: #181c25;
+      --primary-blue: #90caf9;
+      --primary-blue-light: #42a5f5;
+      --primary-white: #232834;
+      --accent-red: #ff5252;
       --accent-red-dark: #b71c1c;
-      --nav-link-hover: #c5cae9;
-      --card-shadow: 0 2px 8px #0001;
+      --nav-link-hover: #26324a;
+      --card-shadow: 0 2px 8px #0007;
+      --text-color: #f1f1f1;
+      --label-color: #64b5f6;
+      --table-header-bg: #232c3b;
+      --table-header-color: #90caf9;
     }
     body {
       font-family: Arial, sans-serif;
@@ -20,19 +24,20 @@
       padding: 0;
       background: var(--primary-bg);
       min-height: 100vh;
+      color: var(--text-color);
     }
     nav {
-      background: var(--primary-blue);
-      color: #fff;
+      background: var(--primary-white);
+      color: var(--primary-blue);
       padding: 1em 2em;
       margin: 0;
       display: flex;
       align-items: center;
       font-size: 1.1em;
-      box-shadow: 0 2px 4px #0002;
+      box-shadow: 0 2px 4px #000a;
     }
     nav a {
-      color: #fff;
+      color: var(--primary-blue);
       margin-right: 2em;
       text-decoration: none;
       font-weight: bold;
@@ -49,7 +54,7 @@
       align-items: center;
       background: var(--primary-bg);
       padding: 1.5em 2em 0.5em 2em;
-      border-bottom: 1px solid #dee2e6;
+      border-bottom: 1px solid #232c3b;
     }
     .top-actions .logout-btn {
       padding: 0.6em 1.2em;
@@ -62,7 +67,7 @@
       text-decoration: none;
       font-weight: bold;
       transition: background 0.2s;
-      box-shadow: 0 1px 3px #0002;
+      box-shadow: 0 1px 3px #0007;
     }
     .top-actions .logout-btn:hover {
       background: var(--accent-red-dark);
@@ -82,6 +87,7 @@
       padding: 2em 1.5em;
       margin: 0 2em 2em 2em;
       max-width: 600px;
+      color: var(--text-color);
     }
     .tree-step {
       margin-bottom: 2em;
@@ -89,13 +95,14 @@
     .tree-question {
       font-size: 1.15em;
       margin-bottom: 1em;
-      color: var(--primary-blue);
+      color: var(--label-color);
       font-weight: bold;
     }
     .tree-options label {
       display: block;
       margin-bottom: 0.7em;
       cursor: pointer;
+      color: var(--text-color);
     }
     .tree-result {
       font-size: 1.15em;
@@ -112,9 +119,13 @@
       padding: 0.4em 1em;
       border-radius: 4px;
       font-weight: bold;
+      transition: background 0.2s;
     }
     .tree-back:hover {
-      background: #e3e6f3;
+      background: #232c3b;
+    }
+    input[type="radio"] {
+      accent-color: var(--primary-blue-light);
     }
     @media (max-width: 700px) {
       h1, .tree-card { margin-left: 1em; margin-right: 1em; }
