@@ -147,92 +147,148 @@
     <!-- Decision tree will be rendered here -->
   </div>
   <script>
-    // A sample Decision Tree (customize as needed)
-    // Each step has: question, options [{text, nextStep/result}]
+    // VAK Learning Style Decision Tree Structure
     const tree = [
+      // Q1
       {
-        question: "Is the learner's average above 80?",
+        question: "When given instructions, how does the learner respond best?",
         options: [
-          { text: "Yes", next: 1 },
-          { text: "No", next: 2 }
+          { text: "Likes to see written steps or diagrams", next: 1 },   // Visual
+          { text: "Prefers to hear instructions or repeat them aloud", next: 2 }, // Auditory
+          { text: "Needs to try it out physically or follow hands-on", next: 3 }  // Kinesthetic
         ]
       },
+      // Q2 - Visual Checklist
       {
-        question: "Does the learner prefer visual materials?",
-        options: [
-          { text: "Yes", result: "Visual Learner: Use diagrams, charts, and reading/writing." },
-          { text: "No", result: "Auditory Learner: Encourage discussion, oral presentation, listening." }
-        ]
+        checklist: [
+          "Prefers charts, diagrams, color-coded notes",
+          "Takes detailed notes or doodles",
+          "Recalls content better through reading or images"
+        ],
+        label: "Visual Learner Checklist",
+        result: "If Yes to most: Learner is <b style='color:#42a5f5'>Visual</b>"
       },
+      // Q3 - Auditory Checklist
       {
-        question: "Is the average above 60?",
-        options: [
-          { text: "Yes", result: "Auditory Learner: Use group work, discussions, and audio resources." },
-          { text: "No", next: 3 }
-        ]
+        checklist: [
+          "Enjoys discussions, oral instructions, storytelling",
+          "Remembers songs, rhymes, and spoken repetition",
+          "Talks through tasks or reads aloud"
+        ],
+        label: "Auditory Learner Checklist",
+        result: "If Yes to most: Learner is <b style='color:#42a5f5'>Auditory</b>"
       },
+      // Q4 - Kinesthetic Checklist
       {
-        question: "Does the learner benefit from hands-on tasks?",
-        options: [
-          { text: "Yes", result: "Kinesthetic Learner: Use projects, activities, and physical manipulatives." },
-          { text: "No", result: "Consider alternative supports and differentiated strategies." }
-        ]
+        checklist: [
+          "Learns best by doing, building, or moving",
+          "Likes role-play, experiments, or hands-on activities",
+          "Finds it hard to sit still for long"
+        ],
+        label: "Kinesthetic Learner Checklist",
+        result: "If Yes to most: Learner is <b style='color:#42a5f5'>Kinesthetic</b>"
       }
     ];
 
     let step = 0, history = [];
+
     function renderTree() {
       const card = document.getElementById('treeCard');
       card.innerHTML = "";
       const curr = tree[step];
-      if (!curr) return;
-      const div = document.createElement('div');
-      div.className = 'tree-step';
-      div.innerHTML = `<div class="tree-question">${curr.question}</div>`;
-      const optsDiv = document.createElement('div');
-      optsDiv.className = 'tree-options';
-      curr.options.forEach((opt, i) => {
-        const label = document.createElement('label');
-        const input = document.createElement('input');
-        input.type = 'radio';
-        input.name = 'treeOpt';
-        input.value = i;
-        input.onclick = () => {
-          history.push(step);
-          if (opt.hasOwnProperty('next')) {
+
+      // If at main question (Q1)
+      if (step === 0) {
+        const div = document.createElement('div');
+        div.className = 'tree-step';
+        div.innerHTML = `<div class="tree-question">🎓 ${curr.question}</div>`;
+        const optsDiv = document.createElement('div');
+        optsDiv.className = 'tree-options';
+        curr.options.forEach((opt, i) => {
+          const label = document.createElement('label');
+          const input = document.createElement('input');
+          input.type = 'radio';
+          input.name = 'treeOpt';
+          input.value = i;
+          input.onclick = () => {
+            history.push(step);
             step = opt.next;
             renderTree();
-          } else if (opt.hasOwnProperty('result')) {
-            showResult(opt.result);
+          };
+          label.appendChild(input);
+          label.appendChild(document.createTextNode(" " + opt.text));
+          optsDiv.appendChild(label);
+        });
+        div.appendChild(optsDiv);
+        card.appendChild(div);
+      }
+      // If at a checklist (Q2, Q3, Q4)
+      else if (curr.checklist) {
+        const icons = ['🖼️','🎤','🚗'];
+        const icon = icons[step-1] || '';
+        const div = document.createElement('div');
+        div.className = 'tree-step';
+        div.innerHTML = `<div class="tree-question">${icon} ${curr.label}</div>`;
+        const checklistDiv = document.createElement('div');
+        checklistDiv.style.marginBottom = '1em';
+        curr.checklist.forEach((item, i) => {
+          const label = document.createElement('label');
+          label.style.display = 'flex';
+          label.style.alignItems = 'center';
+          label.style.marginBottom = '0.5em';
+          const input = document.createElement('input');
+          input.type = 'checkbox';
+          input.name = 'checkItem';
+          input.value = i;
+          label.appendChild(input);
+          label.appendChild(document.createTextNode(" " + item));
+          checklistDiv.appendChild(label);
+        });
+        div.appendChild(checklistDiv);
+
+        // Button to check result
+        const btn = document.createElement('button');
+        btn.textContent = 'Check Result';
+        btn.className = 'tree-back';
+        btn.style.marginTop = '1em';
+        btn.onclick = () => {
+          // Count checked
+          const checkedCount = checklistDiv.querySelectorAll('input[type="checkbox"]:checked').length;
+          if (checkedCount >= 2) {
+            showResult(`${icon} ${curr.result}`);
+          } else {
+            showResult(`${icon} If No or unsure for most: Try another learning style or use mixed strategies.`);
           }
         };
-        label.appendChild(input);
-        label.appendChild(document.createTextNode(" " + opt.text));
-        optsDiv.appendChild(label);
-      });
-      div.appendChild(optsDiv);
-      if (history.length > 0) {
+        div.appendChild(btn);
+
+        // Back button
         const backBtn = document.createElement('button');
         backBtn.className = 'tree-back';
         backBtn.innerText = 'Back';
+        backBtn.style.marginLeft = '1em';
         backBtn.onclick = () => {
-          step = history.pop();
+          step = history.pop() || 0;
           renderTree();
         };
         div.appendChild(backBtn);
+
+        card.appendChild(div);
       }
-      card.appendChild(div);
     }
+
     function showResult(result) {
       const card = document.getElementById('treeCard');
       card.innerHTML = `<div class="tree-result">${result}</div>
         <button class="tree-back" onclick="restartTree()">Restart</button>`;
     }
+
     function restartTree() {
       step = 0;
       history = [];
       renderTree();
     }
+
     renderTree();
   </script>
 </body>
