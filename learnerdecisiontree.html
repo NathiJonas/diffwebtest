@@ -1,388 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Learner Decision Tree</title>
+  <meta charset="UTF-8" />
+  <title>VAK Learning Style Quiz for Teachers</title>
   <style>
-    :root {
-      --primary-bg: #181c25;
-      --primary-blue: #90caf9;
-      --primary-blue-light: #42a5f5;
-      --primary-white: #232834;
-      --accent-red: #ff5252;
-      --accent-red-dark: #b71c1c;
-      --nav-link-hover: #26324a;
-      --card-shadow: 0 2px 8px #0007;
-      --text-color: #f1f1f1;
-      --label-color: #64b5f6;
-      --table-header-bg: #232c3b;
-      --table-header-color: #90caf9;
-    }
     body {
       font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: var(--primary-bg);
-      min-height: 100vh;
-      color: var(--text-color);
-    }
-    nav {
-      background: var(--primary-white);
-      color: var(--primary-blue);
-      padding: 1em 2em;
-      margin: 0;
-      display: flex;
-      align-items: center;
-      font-size: 1.1em;
-      box-shadow: 0 2px 4px #000a;
-    }
-    nav a {
-      color: var(--primary-blue);
-      margin-right: 2em;
-      text-decoration: none;
-      font-weight: bold;
-      letter-spacing: 0.03em;
-      transition: color 0.2s;
-    }
-    nav a:hover {
-      color: var(--nav-link-hover);
-    }
-    .top-actions {
-      display: flex;
-      gap: 0.8em;
-      justify-content: flex-end;
-      align-items: center;
-      background: var(--primary-bg);
-      padding: 1.5em 2em 0.5em 2em;
-      border-bottom: 1px solid #232c3b;
-    }
-    .top-actions .logout-btn {
-      padding: 0.6em 1.2em;
-      font-size: 1em;
-      border: none;
-      border-radius: 5px;
-      background: var(--accent-red);
-      color: #fff;
-      cursor: pointer;
-      text-decoration: none;
-      font-weight: bold;
-      transition: background 0.2s;
-      box-shadow: 0 1px 3px #0007;
-    }
-    .top-actions .logout-btn:hover {
-      background: var(--accent-red-dark);
+      background: #f3f6fa;
+      padding: 2rem;
+      max-width: 800px;
+      margin: auto;
     }
     h1 {
-      color: var(--primary-blue);
-      margin-left: 2em;
-      margin-bottom: 1em;
-      margin-top: 1em;
-      font-size: 2em;
-      letter-spacing: 0.01em;
+      text-align: center;
+      color: #333;
     }
-    .tree-card {
-      background: var(--primary-white);
+    .question {
+      margin-bottom: 1.5rem;
+      background: #fff;
+      padding: 1rem;
       border-radius: 8px;
-      box-shadow: var(--card-shadow);
-      padding: 2em 1.5em;
-      margin: 0 2em 2em 2em;
-      max-width: 600px;
-      color: var(--text-color);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
     }
-    .tree-step {
-      margin-bottom: 2em;
+    .question h3 {
+      margin-bottom: 0.5rem;
     }
-    .tree-question {
-      font-size: 1.15em;
-      margin-bottom: 1em;
-      color: var(--label-color);
-      font-weight: bold;
-    }
-    .tree-options label {
+    label {
       display: block;
-      margin-bottom: 0.7em;
+      margin-bottom: 0.3rem;
       cursor: pointer;
-      color: var(--text-color);
     }
-    .tree-result {
-      font-size: 1.15em;
-      margin-top: 2em;
-      font-weight: bold;
-      color: var(--primary-blue-light);
-    }
-    .tree-back {
-      background: var(--primary-bg);
+    button {
+      display: block;
+      margin: 2rem auto;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      background-color: #007bff;
+      color: white;
       border: none;
-      color: var(--primary-blue);
-      margin-top: 1em;
-      cursor: pointer;
-      padding: 0.4em 1em;
-      border-radius: 4px;
-      font-weight: bold;
-      transition: background 0.2s;
-    }
-    .tree-back:hover {
-      background: #232c3b;
-    }
-    input[type="radio"] {
-      accent-color: var(--primary-blue-light);
-    }
-    @media (max-width: 700px) {
-      h1, .tree-card { margin-left: 1em; margin-right: 1em; }
-      .top-actions { flex-direction: column; align-items: flex-end; }
-    }
-
-    /* Progress Bar */
-    .tree-progress {
-      width: 100%;
-      background: #232c3b;
-      border-radius: 5px;
-      height: 14px;
-      margin-bottom: 1.5em;
-      overflow: hidden;
-    }
-    .tree-progress-bar {
-      height: 100%;
-      background: var(--primary-blue-light);
-      width: 0%;
-      transition: width 0.7s cubic-bezier(.4,2.2,.2,1);
-    }
-
-    /* Info Card */
-    .info-card {
-      background: #26324a;
-      color: #f8faff;
-      border-left: 5px solid var(--primary-blue-light);
       border-radius: 6px;
-      padding: 1.2em 1.2em 1.2em 1.6em;
-      margin: 1.3em 0;
-      font-size: 1.05em;
-      box-shadow: 0 2px 10px #0002;
-      animation: fadeInCard 0.7s;
+      cursor: pointer;
     }
-    @keyframes fadeInCard {
-      from { opacity: 0; transform: translateY(25px);}
-      to { opacity: 1; transform: translateY(0);}
+    button:hover {
+      background-color: #0056b3;
     }
-
-    /* Animated Diagrams */
-    .animated-diagram {
-      width: 100px; height: 100px;
-      margin: 0.7em auto 1.5em auto;
-      display: block;
+    #result {
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-top: 2rem;
     }
-    .visual-diagram { animation: pulse-blue 1.3s infinite alternate;}
-    @keyframes pulse-blue { 0%{filter: drop-shadow(0 0 0 #42a5f5);} 100%{filter: drop-shadow(0 0 12px #42a5f5);} }
-    .auditory-diagram { animation: bounce-red 1.3s infinite alternate;}
-    @keyframes bounce-red { 0%{transform:scale(1);} 100%{transform:scale(1.07) translateY(-7px);} }
-    .kinesthetic-diagram { animation: shake-green 0.9s infinite alternate;}
-    @keyframes shake-green { 0%{transform:rotate(-4deg);} 100%{transform:rotate(4deg);} }
   </style>
 </head>
 <body>
-  <nav>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="learner-style.html">Learner Profile</a>
-    <a href="learnerdecisiontree.html">Decision Tree</a>
-  </nav>
-  <div class="top-actions">
-    <a href="logout.html" class="logout-btn">Log Out</a>
-  </div>
-  <h1>Learner Decision Tree</h1>
-  <div class="tree-card" id="treeCard">
-    <!-- Decision tree will be rendered here -->
-  </div>
+
+  <h1>Teacher VAK Learning Style Quiz</h1>
+
+  <form id="quizForm">
+    <!-- Repeat for 15 questions -->
+    <div class="question">
+      <h3>1. When introduced to new content, the learner...</h3>
+      <label><input type="radio" name="q1" value="A" required> A) Watches closely and copies diagrams or written content</label>
+      <label><input type="radio" name="q1" value="B"> B) Listens attentively and asks verbal questions</label>
+      <label><input type="radio" name="q1" value="C"> C) Engages physically with materials</label>
+    </div>
+
+    <div class="question">
+      <h3>2. During group work, the learner usually...</h3>
+      <label><input type="radio" name="q2" value="A" required> A) Volunteers to write or draw</label>
+      <label><input type="radio" name="q2" value="B"> B) Leads discussions or explains ideas</label>
+      <label><input type="radio" name="q2" value="C"> C) Builds, arranges, or demonstrates concepts</label>
+    </div>
+
+    <!-- ... Repeat similarly for questions 3 to 15 ... -->
+
+    <div class="question">
+      <h3>15. When introduced to a new concept, the learner...</h3>
+      <label><input type="radio" name="q15" value="A" required> A) Needs to see an example or visual explanation</label>
+      <label><input type="radio" name="q15" value="B"> B) Needs to hear a clear explanation</label>
+      <label><input type="radio" name="q15" value="C"> C) Needs to try it out or be involved physically</label>
+    </div>
+
+    <button type="button" onclick="calculateResult()">Submit</button>
+  </form>
+
+  <div id="result"></div>
+
   <script>
-    // --- VAK Learning Style Decision Tree Structure with Tips ---
-    const tree = [
-      // Q1
-      {
-        question: "When given instructions, how does the learner respond best?",
-        options: [
-          { text: "Likes to see written steps or diagrams", next: 1 },
-          { text: "Prefers to hear instructions or repeat them aloud", next: 2 },
-          { text: "Needs to try it out physically or follow hands-on", next: 3 }
-        ],
-        tip: "Observe how you naturally approach new tasks. Your preferred method often reveals your learning style."
-      },
-      // Visual Checklist
-      {
-        diagram: "visual",
-        checklist: [
-          "Prefers charts, diagrams, color-coded notes",
-          "Takes detailed notes or doodles",
-          "Recalls content better through reading or images"
-        ],
-        label: "Visual Learner Checklist",
-        result: "If Yes to most: Learner is <b style='color:#42a5f5'>Visual</b>",
-        tip: "<b>Visual Tips:</b> Use mind maps, color-coded notes, and draw diagrams to organize information."
-      },
-      // Auditory Checklist
-      {
-        diagram: "auditory",
-        checklist: [
-          "Enjoys discussions, oral instructions, storytelling",
-          "Remembers songs, rhymes, and spoken repetition",
-          "Talks through tasks or reads aloud"
-        ],
-        label: "Auditory Learner Checklist",
-        result: "If Yes to most: Learner is <b style='color:#e57373'>Auditory</b>",
-        tip: "<b>Auditory Tips:</b> Read aloud, join study groups, and use mnemonic songs or rhymes."
-      },
-      // Kinesthetic Checklist
-      {
-        diagram: "kinesthetic",
-        checklist: [
-          "Learns best by doing, building, or moving",
-          "Likes role-play, experiments, or hands-on activities",
-          "Finds it hard to sit still for long"
-        ],
-        label: "Kinesthetic Learner Checklist",
-        result: "If Yes to most: Learner is <b style='color:#81c784'>Kinesthetic</b>",
-        tip: "<b>Kinesthetic Tips:</b> Use movement, hands-on experiments, and frequent breaks."
-      }
-    ];
+    function calculateResult() {
+      const form = document.forms['quizForm'];
+      let scoreA = 0, scoreB = 0, scoreC = 0;
 
-    // --- Progress Bar Calculation ---
-    function getProgress() {
-      // step: 0 = Q1, 1/2/3 = checklist, 4 = result
-      const totalSteps = 3; // Q1 + checklist
-      return Math.min((step + 1) / (totalSteps + 1) * 100, 100);
+      for (let i = 1; i <= 15; i++) {
+        const answer = form[`q${i}`].value;
+        if (answer === "A") scoreA++;
+        else if (answer === "B") scoreB++;
+        else if (answer === "C") scoreC++;
+      }
+
+      let resultText = "";
+      if (scoreA > scoreB && scoreA > scoreC) {
+        resultText = "🧠 Learner is a Visual Learner";
+      } else if (scoreB > scoreA && scoreB > scoreC) {
+        resultText = "🗣️ Learner is an Auditory Learner";
+      } else if (scoreC > scoreA && scoreC > scoreB) {
+        resultText = "🤲 Learner is a Kinesthetic Learner";
+      } else {
+        resultText = "🔁 Mixed Learning Style – consider a blended approach";
+      }
+
+      document.getElementById("result").textContent = resultText;
     }
-
-    // --- Diagrams as SVG ---
-    function getDiagram(type) {
-      if (type === "visual") {
-        return `<svg class="animated-diagram visual-diagram"><circle cx="50" cy="50" r="43" fill="#42a5f5" opacity="0.28"/><rect x="30" y="35" width="40" height="30" rx="6" fill="#90caf9"/><line x1="35" y1="50" x2="65" y2="50" stroke="#232834" stroke-width="4"/></svg>`;
-      }
-      if (type === "auditory") {
-        return `<svg class="animated-diagram auditory-diagram"><ellipse cx="50" cy="55" rx="32" ry="28" fill="#e57373" opacity="0.25"/><rect x="38" y="35" width="22" height="35" rx="5" fill="#ff5252"/><rect x="44" y="60" width="10" height="10" rx="2" fill="#fff"/><path d="M60 60 Q70 50 60 40" stroke="#ff5252" stroke-width="4" fill="none"/></svg>`;
-      }
-      if (type === "kinesthetic") {
-        return `<svg class="animated-diagram kinesthetic-diagram"><rect x="30" y="65" width="40" height="15" rx="6" fill="#81c784" opacity="0.5"/><circle cx="50" cy="45" r="17" fill="#388e3c"/><rect x="46" y="55" width="8" height="22" rx="4" fill="#81c784"/><rect x="38" y="70" width="8" height="16" rx="4" fill="#81c784"/><rect x="54" y="70" width="8" height="16" rx="4" fill="#81c784"/></svg>`;
-      }
-      return "";
-    }
-
-    // --- Render Function with Progress, Diagrams, Info Cards ---
-    let step = 0, history = [];
-    function renderTree() {
-      const card = document.getElementById('treeCard');
-      card.innerHTML = "";
-
-      // Progress bar
-      const progressDiv = document.createElement('div');
-      progressDiv.className = 'tree-progress';
-      progressDiv.innerHTML = `<div class="tree-progress-bar" style="width:${getProgress()}%"></div>`;
-      card.appendChild(progressDiv);
-
-      const curr = tree[step];
-
-      // Info card for general tips
-      if (curr.tip) {
-        const tipDiv = document.createElement('div');
-        tipDiv.className = 'info-card';
-        tipDiv.innerHTML = "💡 " + curr.tip;
-        card.appendChild(tipDiv);
-      }
-
-      // Main question (Q1)
-      if (step === 0) {
-        const div = document.createElement('div');
-        div.className = 'tree-step';
-        div.innerHTML = `<div class="tree-question">🎓 ${curr.question}</div>`;
-        const optsDiv = document.createElement('div');
-        optsDiv.className = 'tree-options';
-        curr.options.forEach((opt, i) => {
-          const label = document.createElement('label');
-          const input = document.createElement('input');
-          input.type = 'radio';
-          input.name = 'treeOpt';
-          input.value = i;
-          input.onclick = () => {
-            history.push(step);
-            step = opt.next;
-            renderTree();
-          };
-          label.appendChild(input);
-          label.appendChild(document.createTextNode(" " + opt.text));
-          optsDiv.appendChild(label);
-        });
-        div.appendChild(optsDiv);
-        card.appendChild(div);
-      }
-      // Checklist (Q2, Q3, Q4)
-      else if (curr.checklist) {
-        const diagramDiv = document.createElement('div');
-        diagramDiv.innerHTML = getDiagram(curr.diagram);
-        card.appendChild(diagramDiv);
-
-        const div = document.createElement('div');
-        div.className = 'tree-step';
-        div.innerHTML = `<div class="tree-question">${curr.label}</div>`;
-        const checklistDiv = document.createElement('div');
-        checklistDiv.style.marginBottom = '1em';
-        curr.checklist.forEach((item, i) => {
-          const label = document.createElement('label');
-          label.style.display = 'flex';
-          label.style.alignItems = 'center';
-          label.style.marginBottom = '0.5em';
-          const input = document.createElement('input');
-          input.type = 'checkbox';
-          input.name = 'checkItem';
-          input.value = i;
-          label.appendChild(input);
-          label.appendChild(document.createTextNode(" " + item));
-          checklistDiv.appendChild(label);
-        });
-        div.appendChild(checklistDiv);
-
-        // Button to check result
-        const btn = document.createElement('button');
-        btn.textContent = 'Check Result';
-        btn.className = 'tree-back';
-        btn.style.marginTop = '1em';
-        btn.onclick = () => {
-          const checkedCount = checklistDiv.querySelectorAll('input[type="checkbox"]:checked').length;
-          if (checkedCount >= 2) {
-            showResult(getDiagram(curr.diagram) + " " + curr.result, curr.tip);
-          } else {
-            showResult(getDiagram(curr.diagram) + " If No or unsure for most: Try another learning style or use mixed strategies.", curr.tip);
-          }
-        };
-        div.appendChild(btn);
-
-        // Back button
-        const backBtn = document.createElement('button');
-        backBtn.className = 'tree-back';
-        backBtn.innerText = 'Back';
-        backBtn.style.marginLeft = '1em';
-        backBtn.onclick = () => {
-          step = history.pop() || 0;
-          renderTree();
-        };
-        div.appendChild(backBtn);
-
-        card.appendChild(div);
-      }
-    }
-
-    // --- Show Result with Info Card ---
-    function showResult(result, tip) {
-      const card = document.getElementById('treeCard');
-      card.innerHTML = `<div class="tree-progress"><div class="tree-progress-bar" style="width:100%"></div></div>
-        <div class="tree-result">${result}</div>
-        ${tip ? `<div class="info-card">💡 ${tip}</div>` : ""}
-        <button class="tree-back" onclick="restartTree()">Restart</button>`;
-    }
-
-    function restartTree() {
-      step = 0;
-      history = [];
-      renderTree();
-    }
-
-    renderTree();
   </script>
 </body>
 </html>
