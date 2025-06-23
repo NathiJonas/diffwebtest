@@ -6,21 +6,21 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f3f6fa;
+      background: linear-gradient(135deg, #e3f1fb, #d0e6f6 80%);
       padding: 2rem;
       max-width: 800px;
       margin: auto;
     }
     h1 {
       text-align: center;
-      color: #333;
+      color: #185a9d;
     }
     .question {
       margin-bottom: 1.5rem;
-      background: #fff;
+      background: #ffffffcc;
       padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(24,90,157,0.10);
     }
     .question h3 {
       margin-bottom: 0.5rem;
@@ -35,57 +35,121 @@
       margin: 2rem auto;
       padding: 0.75rem 1.5rem;
       font-size: 1rem;
-      background-color: #007bff;
+      background: linear-gradient(90deg, #43cea2, #185a9d);
       color: white;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
+      transition: background 0.3s ease;
     }
     button:hover {
-      background-color: #0056b3;
+      background: linear-gradient(90deg, #185a9d, #43cea2);
     }
     #result {
       text-align: center;
       font-size: 1.2rem;
       font-weight: bold;
       margin-top: 2rem;
+      color: #185a9d;
     }
   </style>
 </head>
 <body>
-
   <h1>Teacher VAK Learning Style Quiz</h1>
-
   <form id="quizForm">
-    <!-- Repeat for 15 questions -->
     <div class="question">
       <h3>1. When introduced to new content, the learner...</h3>
       <label><input type="radio" name="q1" value="A" required> A) Watches closely and copies diagrams or written content</label>
       <label><input type="radio" name="q1" value="B"> B) Listens attentively and asks verbal questions</label>
       <label><input type="radio" name="q1" value="C"> C) Engages physically with materials</label>
     </div>
-
     <div class="question">
       <h3>2. During group work, the learner usually...</h3>
       <label><input type="radio" name="q2" value="A" required> A) Volunteers to write or draw</label>
       <label><input type="radio" name="q2" value="B"> B) Leads discussions or explains ideas</label>
       <label><input type="radio" name="q2" value="C"> C) Builds, arranges, or demonstrates concepts</label>
     </div>
-
-    <!-- ... Repeat similarly for questions 3 to 15 ... -->
-
+    <div class="question">
+      <h3>3. When learning a new skill, the learner prefers...</h3>
+      <label><input type="radio" name="q3" value="A" required> A) Seeing step-by-step instructions or diagrams</label>
+      <label><input type="radio" name="q3" value="B"> B) Listening to explanations or talking it through</label>
+      <label><input type="radio" name="q3" value="C"> C) Trying it out hands-on immediately</label>
+    </div>
+    <div class="question">
+      <h3>4. To remember information, the learner...</h3>
+      <label><input type="radio" name="q4" value="A" required> A) Visualizes or draws it</label>
+      <label><input type="radio" name="q4" value="B"> B) Repeats it out loud or listens to recordings</label>
+      <label><input type="radio" name="q4" value="C"> C) Practices or acts it out</label>
+    </div>
+    <div class="question">
+      <h3>5. If unsure about a topic, the learner...</h3>
+      <label><input type="radio" name="q5" value="A" required> A) Looks for charts or visual aids</label>
+      <label><input type="radio" name="q5" value="B"> B) Asks questions or discusses with others</label>
+      <label><input type="radio" name="q5" value="C"> C) Experiments to figure it out</label>
+    </div>
+    <div class="question">
+      <h3>6. When following directions, the learner prefers...</h3>
+      <label><input type="radio" name="q6" value="A" required> A) Written instructions or maps</label>
+      <label><input type="radio" name="q6" value="B"> B) Verbal instructions</label>
+      <label><input type="radio" name="q6" value="C"> C) Demonstrations or physically following along</label>
+    </div>
+    <div class="question">
+      <h3>7. In class, the learner is most engaged when...</h3>
+      <label><input type="radio" name="q7" value="A" required> A) Watching videos or presentations</label>
+      <label><input type="radio" name="q7" value="B"> B) Listening to stories or lectures</label>
+      <label><input type="radio" name="q7" value="C"> C) Doing experiments or activities</label>
+    </div>
+    <div class="question">
+      <h3>8. When working independently, the learner...</h3>
+      <label><input type="radio" name="q8" value="A" required> A) Makes lists or mind maps</label>
+      <label><input type="radio" name="q8" value="B"> B) Talks themselves through the process</label>
+      <label><input type="radio" name="q8" value="C"> C) Moves around or manipulates objects</label>
+    </div>
+    <div class="question">
+      <h3>9. The learner enjoys...</h3>
+      <label><input type="radio" name="q9" value="A" required> A) Drawing, painting, or watching demonstrations</label>
+      <label><input type="radio" name="q9" value="B"> B) Listening to music, podcasts, or conversations</label>
+      <label><input type="radio" name="q9" value="C"> C) Sports, drama, or building things</label>
+    </div>
+    <div class="question">
+      <h3>10. During revision, the learner...</h3>
+      <label><input type="radio" name="q10" value="A" required> A) Writes summaries or uses flashcards</label>
+      <label><input type="radio" name="q10" value="B"> B) Reads aloud or discusses with friends</label>
+      <label><input type="radio" name="q10" value="C"> C) Re-enacts or uses movement to revise</label>
+    </div>
+    <div class="question">
+      <h3>11. The learner gets frustrated if...</h3>
+      <label><input type="radio" name="q11" value="A" required> A) There are no pictures or visual aids</label>
+      <label><input type="radio" name="q11" value="B"> B) They can’t discuss or hear explanations</label>
+      <label><input type="radio" name="q11" value="C"> C) They can’t participate physically</label>
+    </div>
+    <div class="question">
+      <h3>12. When telling a story, the learner...</h3>
+      <label><input type="radio" name="q12" value="A" required> A) Describes what things looked like</label>
+      <label><input type="radio" name="q12" value="B"> B) Focuses on what was said or heard</label>
+      <label><input type="radio" name="q12" value="C"> C) Acts it out with gestures</label>
+    </div>
+    <div class="question">
+      <h3>13. The learner chooses...</h3>
+      <label><input type="radio" name="q13" value="A" required> A) Books with lots of pictures</label>
+      <label><input type="radio" name="q13" value="B"> B) Audiobooks or group readings</label>
+      <label><input type="radio" name="q13" value="C"> C) Hands-on kits or activities</label>
+    </div>
+    <div class="question">
+      <h3>14. In a museum, the learner...</h3>
+      <label><input type="radio" name="q14" value="A" required> A) Observes displays and reads explanations</label>
+      <label><input type="radio" name="q14" value="B"> B) Listens to audio guides or explanations</label>
+      <label><input type="radio" name="q14" value="C"> C) Touches exhibits or tries interactive displays</label>
+    </div>
     <div class="question">
       <h3>15. When introduced to a new concept, the learner...</h3>
       <label><input type="radio" name="q15" value="A" required> A) Needs to see an example or visual explanation</label>
       <label><input type="radio" name="q15" value="B"> B) Needs to hear a clear explanation</label>
       <label><input type="radio" name="q15" value="C"> C) Needs to try it out or be involved physically</label>
     </div>
-
     <button type="button" onclick="calculateResult()">Submit</button>
   </form>
-
   <div id="result"></div>
-
   <script>
     function calculateResult() {
       const form = document.forms['quizForm'];
