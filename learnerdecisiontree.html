@@ -183,13 +183,13 @@
 
       let resultText = "";
       if (scoreA > scoreB && scoreA > scoreC) {
-        resultText = "🧠 Learner is a Visual Learner";
+        resultText = "Learner is a Visual Learner";
       } else if (scoreB > scoreA && scoreB > scoreC) {
-        resultText = "🗣️ Learner is an Auditory Learner";
+        resultText = "Learner is an Auditory Learner";
       } else if (scoreC > scoreA && scoreC > scoreB) {
-        resultText = "🧑‍🎤 Learner is a Kinesthetic Learner";
+        resultText = "Learner is a Kinesthetic Learner";
       } else {
-        resultText = "🔁 Mixed Learning Style – consider a blended approach";
+        resultText = "Mixed Learning Style – consider a blended approach";
       }
 
       document.getElementById("result").textContent = resultText;
