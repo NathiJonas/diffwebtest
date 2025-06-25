@@ -2,87 +2,117 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>VAK Learning Style Quiz for Teachers</title>
+  <title>Learning Style Assistance Quiz for Teachers</title>
+  <link href="https://fonts.googleapis.com/css?family=Poppins:400,600&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #232526, #414345 80%);
-      color: #f1f1f1;
+      font-family: 'Poppins', Arial, sans-serif;
+      background: linear-gradient(135deg, #1e3c72, #2a5298 80%);
+      color: #f4f7fa;
       padding: 2rem;
-      max-width: 800px;
+      max-width: 900px;
       margin: auto;
+      min-height: 100vh;
     }
     nav {
-      position: absolute;
-      top: 2rem;<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>VAK Learning Style Quiz for Teachers</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #232526, #414345 80%);
-      color: #f1f1f1;
-      padding: 2rem;
-      max-width: 800px;
-      margin: auto;
-    }
-    nav {
-      position: absolute;
-      top: 2rem;
-      left: 2rem;
-      margin-bottom: 2rem;
-      text-align: left;
+      position: sticky;
+      top: 1rem;
+      display: flex;
+      gap: 1rem;
+      background: rgba(44, 62, 80, 0.90);
+      border-radius: 12px;
+      padding: 0.5rem 1rem;
       z-index: 100;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 8px rgba(30,60,114,0.06);
     }
     nav a {
-      display: block;
-      margin: 0.5rem 0;
       text-decoration: none;
       color: #43cea2;
-      font-weight: bold;
-      transition: color 0.2s;
+      font-weight: 600;
+      padding: 0.3rem 0.8rem;
+      border-radius: 5px;
+      transition: background 0.2s, color 0.2s;
     }
     nav a:hover {
-      color: #185a9d;
+      background: #185a9d;
+      color: #fff;
     }
     h1 {
       text-align: center;
       color: #43cea2;
-      margin-top: 4rem; /* make room for nav */
+      margin-top: 1.5rem;
+      margin-bottom: 2rem;
+      font-size: 2.2rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+    .progress-bar {
+      width: 100%;
+      background: #232526;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+      height: 12px;
+      box-shadow: 0 1px 4px rgba(67,206,162,0.10);
+    }
+    .progress {
+      height: 100%;
+      background: linear-gradient(90deg, #43cea2, #185a9d);
+      transition: width 0.3s;
+      width: 0;
     }
     .question {
       margin-bottom: 1.5rem;
       background: #232526cc;
-      padding: 1rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(67,206,162,0.10);
+      padding: 1.2rem 1rem;
+      border-radius: 14px;
+      box-shadow: 0 2px 12px rgba(67,206,162,0.10);
+      transition: box-shadow 0.2s;
+    }
+    .question:focus-within {
+      box-shadow: 0 4px 16px rgba(67,206,162,0.25);
+      outline: 2px solid #43cea2;
     }
     .question h3 {
       margin-bottom: 0.5rem;
+      font-size: 1.15rem;
+      color: #43cea2;
     }
     label {
       display: block;
       margin-bottom: 0.3rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 6px;
       cursor: pointer;
+      transition: background 0.2s;
     }
-    button {
+    input[type="radio"]:focus + label,
+    label:active {
+      background: #185a9d33;
+    }
+    input[type="radio"] {
+      margin-right: 0.7em;
+      accent-color: #43cea2;
+    }
+    button[type="button"], .modal button {
       display: block;
-      margin: 2rem auto;
-      padding: 0.75rem 1.5rem;
-      font-size: 1rem;
+      margin: 2rem auto 0 auto;
+      padding: 0.9rem 2rem;
+      font-size: 1.1rem;
       background: linear-gradient(90deg, #43cea2, #185a9d);
       color: white;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
-      transition: background 0.3s ease;
+      font-weight: 600;
+      box-shadow: 0 2px 10px rgba(30,60,114,0.08);
+      transition: background 0.3s, color 0.2s;
     }
-    button:hover {
+    button[type="button"]:hover, .modal button:hover {
       background: linear-gradient(90deg, #185a9d, #43cea2);
+      color: #fff;
     }
-    /* Modal Styles */
     .modal-overlay {
       display: none;
       position: fixed;
@@ -91,9 +121,12 @@
       z-index: 999;
       justify-content: center;
       align-items: center;
+      opacity: 0;
+      transition: opacity 0.4s;
     }
     .modal-overlay.active {
       display: flex;
+      opacity: 1;
     }
     .modal {
       background: #2d3136;
@@ -107,20 +140,17 @@
       animation: popin 0.45s cubic-bezier(.24,.88,.57,1.18);
       position: relative;
       max-width: 90vw;
-    }
-    @keyframes popin {
-      from { transform: scale(0.7); opacity: 0;}
-      to   { transform: scale(1); opacity: 1;}
+      outline: none;
     }
     .modal button {
       margin: 2rem auto 0 auto;
       background: #43cea2;
       color: #232526;
       font-weight: bold;
-      padding: 0.5rem 1.5rem;
-      border-radius: 6px;
-      border: none;
+      padding: 0.7rem 1.6rem;
+      border-radius: 7px;
       font-size: 1rem;
+      border: none;
       cursor: pointer;
       transition: background 0.2s;
     }
@@ -128,15 +158,33 @@
       background: #185a9d;
       color: #fff;
     }
+    .modal .close-x {
+      position: absolute;
+      top: 1rem; right: 1.2rem;
+      font-size: 1.7rem;
+      color: #aaa;
+      cursor: pointer;
+      transition: color 0.2s;
+      background: none;
+      border: none;
+    }
+    .modal .close-x:hover {
+      color: #43cea2;
+    }
     ul {
       margin: 1em 0 0.5em 0;
       padding-left: 1.5em;
       text-align: left;
     }
+    @keyframes popin {
+      from { transform: scale(0.7); opacity: 0;}
+      to   { transform: scale(1); opacity: 1;}
+    }
     @media (max-width: 600px) {
       body { padding: 0.5rem; }
-      h1 { margin-top: 6rem; font-size: 1.1rem;}
+      h1 { margin-top: 2.5rem; font-size: 1.2rem;}
       .modal { padding: 1rem; font-size: 1em;}
+      nav { flex-direction: column; gap: 0.5rem; }
     }
   </style>
 </head>
@@ -147,92 +195,95 @@
     <a href="learnerdecisiontree.html">Decision Tree</a>
   </nav>
   <h1>Teacher VAK Learning Style Quiz</h1>
+  <div class="progress-bar">
+    <div class="progress" id="progressBar"></div>
+  </div>
   <form id="quizForm">
-    <div class="question">
+    <div class="question" tabindex="0">
       <h3>1. When introduced to new content, the learner...</h3>
       <label><input type="radio" name="q1" value="A" required> A) Watches closely and copies diagrams or written content</label>
       <label><input type="radio" name="q1" value="B"> B) Listens attentively and asks verbal questions</label>
       <label><input type="radio" name="q1" value="C"> C) Engages physically with materials</label>
     </div>
-    <div class="question">
+    <div class="question" tabindex="0">
       <h3>2. During group work, the learner usually...</h3>
       <label><input type="radio" name="q2" value="A" required> A) Volunteers to write or draw</label>
       <label><input type="radio" name="q2" value="B"> B) Leads discussions or explains ideas</label>
       <label><input type="radio" name="q2" value="C"> C) Builds, arranges, or demonstrates concepts</label>
     </div>
-    <div class="question">
+    <div class="question" tabindex="0">
       <h3>3. When learning a new skill, the learner prefers...</h3>
       <label><input type="radio" name="q3" value="A" required> A) Seeing step-by-step instructions or diagrams</label>
       <label><input type="radio" name="q3" value="B"> B) Listening to explanations or talking it through</label>
       <label><input type="radio" name="q3" value="C"> C) Trying it out hands-on immediately</label>
     </div>
-    <div class="question">
+    <div class="question" tabindex="0">
       <h3>4. To remember information, the learner...</h3>
       <label><input type="radio" name="q4" value="A" required> A) Visualizes or draws it</label>
       <label><input type="radio" name="q4" value="B"> B) Repeats it out loud or listens to recordings</label>
       <label><input type="radio" name="q4" value="C"> C) Practices or acts it out</label>
     </div>
-    <div class="question">
+    <div class="question" tabindex="0">
       <h3>5. If unsure about a topic, the learner...</h3>
       <label><input type="radio" name="q5" value="A" required> A) Looks for charts or visual aids</label>
       <label><input type="radio" name="q5" value="B"> B) Asks questions or discusses with others</label>
       <label><input type="radio" name="q5" value="C"> C) Experiments to figure it out</label>
     </div>
-    <div class="question">
+    <div class="question" tabindex="0">
       <h3>6. When following directions, the learner prefers...</h3>
       <label><input type="radio" name="q6" value="A" required> A) Written instructions or maps</label>
       <label><input type="radio" name="q6" value="B"> B) Verbal instructions</label>
       <label><input type="radio" name="q6" value="C"> C) Demonstrations or physically following along</label>
     </div>
-    <div class="question">
+    <div class="question" tabindex="0">
       <h3>7. In class, the learner is most engaged when...</h3>
       <label><input type="radio" name="q7" value="A" required> A) Watching videos or presentations</label>
       <label><input type="radio" name="q7" value="B"> B) Listening to stories or lectures</label>
       <label><input type="radio" name="q7" value="C"> C) Doing experiments or activities</label>
     </div>
-    <div class="question">
+    <div class="question" tabindex="0">
       <h3>8. When working independently, the learner...</h3>
       <label><input type="radio" name="q8" value="A" required> A) Makes lists or mind maps</label>
       <label><input type="radio" name="q8" value="B"> B) Talks themselves through the process</label>
       <label><input type="radio" name="q8" value="C"> C) Moves around or manipulates objects</label>
     </div>
-    <div class="question">
+    <div class="question" tabindex="0">
       <h3>9. The learner enjoys...</h3>
       <label><input type="radio" name="q9" value="A" required> A) Drawing, painting, or watching demonstrations</label>
       <label><input type="radio" name="q9" value="B"> B) Listening to music, podcasts, or conversations</label>
       <label><input type="radio" name="q9" value="C"> C) Sports, drama, or building things</label>
     </div>
-    <div class="question">
+    <div class="question" tabindex="0">
       <h3>10. During revision, the learner...</h3>
       <label><input type="radio" name="q10" value="A" required> A) Writes summaries or uses flashcards</label>
       <label><input type="radio" name="q10" value="B"> B) Reads aloud or discusses with friends</label>
       <label><input type="radio" name="q10" value="C"> C) Re-enacts or uses movement to revise</label>
     </div>
-    <div class="question">
+    <div class="question" tabindex="0">
       <h3>11. The learner gets frustrated if...</h3>
       <label><input type="radio" name="q11" value="A" required> A) There are no pictures or visual aids</label>
       <label><input type="radio" name="q11" value="B"> B) They can’t discuss or hear explanations</label>
       <label><input type="radio" name="q11" value="C"> C) They can’t participate physically</label>
     </div>
-    <div class="question">
+    <div class="question" tabindex="0">
       <h3>12. When telling a story, the learner...</h3>
       <label><input type="radio" name="q12" value="A" required> A) Describes what things looked like</label>
       <label><input type="radio" name="q12" value="B"> B) Focuses on what was said or heard</label>
       <label><input type="radio" name="q12" value="C"> C) Acts it out with gestures</label>
     </div>
-    <div class="question">
+    <div class="question" tabindex="0">
       <h3>13. The learner chooses...</h3>
       <label><input type="radio" name="q13" value="A" required> A) Books with lots of pictures</label>
       <label><input type="radio" name="q13" value="B"> B) Audiobooks or group readings</label>
       <label><input type="radio" name="q13" value="C"> C) Hands-on kits or activities</label>
     </div>
-    <div class="question">
+    <div class="question" tabindex="0">
       <h3>14. In a museum, the learner...</h3>
       <label><input type="radio" name="q14" value="A" required> A) Observes displays and reads explanations</label>
       <label><input type="radio" name="q14" value="B"> B) Listens to audio guides or explanations</label>
       <label><input type="radio" name="q14" value="C"> C) Touches exhibits or tries interactive displays</label>
     </div>
-    <div class="question">
+    <div class="question" tabindex="0">
       <h3>15. When introduced to a new concept, the learner...</h3>
       <label><input type="radio" name="q15" value="A" required> A) Needs to see an example or visual explanation</label>
       <label><input type="radio" name="q15" value="B"> B) Needs to hear a clear explanation</label>
@@ -241,30 +292,43 @@
     <button type="button" onclick="calculateResult()">Submit</button>
   </form>
 
-  <!-- Modal Popup for Result -->
-  <div class="modal-overlay" id="resultModalOverlay">
-    <div class="modal">
+  <div class="modal-overlay" id="resultModalOverlay" tabindex="-1" aria-modal="true" role="dialog">
+    <div class="modal" tabindex="0">
+      <button class="close-x" onclick="closeModal()" aria-label="Close">&times;</button>
       <div id="result"></div>
       <button onclick="closeModal()">Close</button>
     </div>
   </div>
 
   <script>
+    function updateProgress() {
+      const total = 15;
+      let answered = 0;
+      for (let i = 1; i <= total; i++) {
+        if (document.querySelector('input[name="q'+i+'"]:checked')) answered++;
+      }
+      document.getElementById("progressBar").style.width = (answered / total * 100) + "%";
+    }
+    document.getElementById("quizForm").addEventListener("change", updateProgress);
+
     function calculateResult() {
       const form = document.forms['quizForm'];
       let scoreA = 0, scoreB = 0, scoreC = 0;
-
       for (let i = 1; i <= 15; i++) {
-        const answer = form[`q${i}`].value;
-        if (answer === "A") scoreA++;
-        else if (answer === "B") scoreB++;
-        else if (answer === "C") scoreC++;
+        const selected = form['q'+i];
+        if (!selected || !selected.value) {
+          document.querySelector('.question:nth-child(' + (i+1) + ')').scrollIntoView({behavior: "smooth"});
+          document.querySelector('.question:nth-child(' + (i+1) + ')').focus();
+          return;
+        }
+        if (selected.value === "A") scoreA++;
+        else if (selected.value === "B") scoreB++;
+        else if (selected.value === "C") scoreC++;
       }
-
       let resultHtml = "";
       if (scoreA > scoreB && scoreA > scoreC) {
         resultHtml = `
-          <strong>Learner is a Visual Learner</strong><br><br>
+          <strong>Learner is a <span style="color:#43cea2">Visual Learner</span></strong><br><br>
           <em>How Teachers Can Help:</em>
           <ul>
             <li>Use diagrams, charts, and color-coded notes to explain concepts.</li>
@@ -273,11 +337,13 @@
             <li>Provide handouts or slides with key visuals.</li>
             <li>Let students create posters or infographics as assignments.</li>
           </ul>
-          <div style="font-size:0.95em;color:#aaa;">Visual learners absorb information best through images, spatial understanding, and observation. The more you can illustrate and display, the better they will retain the material.</div>
+          <div style="font-size:0.95em;color:#aaa;">
+            Visual learners absorb information best through images, spatial understanding, and observation.
+          </div>
         `;
       } else if (scoreB > scoreA && scoreB > scoreC) {
         resultHtml = `
-          <strong>Learner is an Auditory Learner</strong><br><br>
+          <strong>Learner is an <span style="color:#43cea2">Auditory Learner</span></strong><br><br>
           <em>How Teachers Can Help:</em>
           <ul>
             <li>Explain concepts aloud and use storytelling techniques.</li>
@@ -286,11 +352,13 @@
             <li>Allow students to record lessons or listen to podcasts.</li>
             <li>Invite learners to repeat instructions and explain concepts to peers.</li>
           </ul>
-          <div style="font-size:0.95em;color:#aaa;">Auditory learners remember information best when they hear it. The more opportunities for listening and speaking, the more successful they’ll be.</div>
+          <div style="font-size:0.95em;color:#aaa;">
+            Auditory learners remember information best when they hear it.
+          </div>
         `;
       } else if (scoreC > scoreA && scoreC > scoreB) {
         resultHtml = `
-          <strong>Learner is a Kinesthetic Learner</strong><br><br>
+          <strong>Learner is a <span style="color:#43cea2">Kinesthetic Learner</span></strong><br><br>
           <em>How Teachers Can Help:</em>
           <ul>
             <li>Plan hands-on activities such as experiments and role-plays.</li>
@@ -299,11 +367,13 @@
             <li>Let students take notes using gestures or drawing while moving around.</li>
             <li>Provide opportunities for field trips and real-world exploration.</li>
           </ul>
-          <div style="font-size:0.95em;color:#aaa;">Kinesthetic learners understand best by doing. The more movement and interaction, the deeper their understanding.</div>
+          <div style="font-size:0.95em;color:#aaa;">
+            Kinesthetic learners understand best by doing.
+          </div>
         `;
       } else {
         resultHtml = `
-          <strong>Mixed Learning Style – Blended Approach Recommended</strong><br><br>
+          <strong>Mixed Learning Style – <span style="color:#43cea2">Blended Approach Recommended</span></strong><br><br>
           <em>How Teachers Can Help:</em>
           <ul>
             <li>Combine visual, auditory, and hands-on activities when teaching.</li>
@@ -312,17 +382,30 @@
             <li>Encourage students to explore and discover which methods work best for them.</li>
             <li>Use collaborative projects that incorporate multiple learning styles.</li>
           </ul>
-          <div style="font-size:0.95em;color:#aaa;">A blended approach ensures all learners’ preferences are addressed, helping each student access material in their strongest mode.</div>
+          <div style="font-size:0.95em;color:#aaa;">
+            A blended approach ensures all learners’ preferences are addressed.
+          </div>
         `;
       }
-
       document.getElementById("result").innerHTML = resultHtml;
       document.getElementById("resultModalOverlay").classList.add('active');
+      document.querySelector('.modal').focus();
     }
 
     function closeModal() {
       document.getElementById("resultModalOverlay").classList.remove('active');
     }
+    document.addEventListener('keydown', function(event) {
+      if (event.key === "Escape") closeModal();
+    });
+
+    document.getElementById("resultModalOverlay").addEventListener('transitionend', function() {
+      if (this.classList.contains('active')) {
+        document.querySelector('.modal').focus();
+      }
+    });
+
+    updateProgress();
   </script>
 </body>
 </html>
